@@ -15,6 +15,8 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 GRAY = (100, 100, 100)
 
+ROUND_TIME = 60000 # 60 giây
+
 # --- HẰNG SỐ VẬT LÝ VÀ GAMEPLAY ---
 GRAVITY = 1
 JUMP_POWER = -20 

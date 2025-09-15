@@ -44,6 +44,14 @@ class Game:
         self.ai_controller = None
         self.winner = None
 
+        self.player_rounds_won = 0
+        self.ai_rounds_won = 0
+        self.current_round = 1
+        self.round_start_time = 0
+        self.round_timer = ROUND_TIME
+        self.round_over = False
+        self.round_over_time = 0
+
         # Biến kết thúc trận đấu
         self.replay_button_rect = None
         self.quit_button_rect = None
@@ -68,21 +76,31 @@ class Game:
         self.portraits = {'A': self.portrait_a, 'B': self.portrait_b}
         self.char_stats = {'A': CHAR_A_STATS, 'B': CHAR_B_STATS}
 
+    def start_new_round(self):
+        """Reset máu, vị trí và đồng hồ cho một hiệp mới."""
+        self.player.reset()
+        self.ai.reset()
+        self.round_start_time = pygame.time.get_ticks()
+        self.round_over = False
+        print(f"--- HIỆP {self.current_round} BẮT ĐẦU ---")
+
     def reset_game(self):
+        """Khởi tạo một trận đấu mới từ đầu."""
         # Thiết lập nhân vật
         self.player = Fighter(self.player_choice, x=200, y=GROUND_Y, is_player_one=True)
         self.ai = Fighter(self.ai_choice, x=600, y=GROUND_Y, is_player_one=False)
         
-        # Chọn AI Controller dựa trên độ khó
-        # Hiện tại tất cả đều là AIRandom, sẵn sàng để nâng cấp sau
-        if self.difficulty_choice == "EASY":
-            self.ai_controller = AIRandom(self.ai, self.player)
-        elif self.difficulty_choice == "MEDIUM":
-            self.ai_controller = AIRandom(self.ai, self.player) # Sẽ thay bằng AI tốt hơn
-        elif self.difficulty_choice == "HARD":
-            self.ai_controller = AIRandom(self.ai, self.player) # Sẽ thay bằng AI tốt hơn
+        # Chọn AI Controller
+        self.ai_controller = AIRandom(self.ai, self.player) # Nâng cấp sau
             
+        # Reset thông số trận đấu
         self.winner = None
+        self.player_rounds_won = 0
+        self.ai_rounds_won = 0
+        self.current_round = 1
+        
+        # Bắt đầu hiệp đầu tiên
+        self.start_new_round()
         self.game_state = "IN_GAME"
 
     def handle_character_selection(self, event):
@@ -172,25 +190,83 @@ class Game:
                         self.running = False
 
     def update(self):
-        if self.game_state == "IN_GAME":
+        if self.game_state != "IN_GAME":
+            return # Không làm gì nếu không ở trong trận đấu
+
+        # --- LOGIC KHI HIỆP ĐẤU ĐANG DIỄN RA ---
+        if not self.round_over:
+            # Cập nhật đồng hồ
+            elapsed_time = pygame.time.get_ticks() - self.round_start_time
+            self.round_timer = ROUND_TIME - elapsed_time
+            
+            # AI ra quyết định
             if not self.ai.dead:
                 self.ai_controller.update()
 
-            if not self.player.dead:
-                self.player.move(target=self.ai)
-            if not self.ai.dead:
-                self.ai.move(target=self.player)
+            # Cập nhật di chuyển và vật lý
+            if not self.player.dead: self.player.move(target=self.ai)
+            if not self.ai.dead: self.ai.move(target=self.player)
 
+            # Cập nhật animation
             self.player.update()
             self.ai.update()
             
-            if self.player.dead and not self.winner:
-                self.winner = self.ai.name
-                self.game_state = "GAME_OVER"
-            elif self.ai.dead and not self.winner:
-                self.winner = self.player.name
-                self.game_state = "GAME_OVER"
+            # Kiểm tra điều kiện kết thúc hiệp
+            if self.player.dead or self.ai.dead or self.round_timer <= 0:
+                self.round_over = True
+                self.round_over_time = pygame.time.get_ticks()
+                self.handle_round_result()
 
+        # --- LOGIC KHI HIỆP ĐẤU KẾT THÚC (chờ 3 giây) ---
+        else:
+            if pygame.time.get_ticks() - self.round_over_time > 3000: # 3 giây nghỉ
+                # Nếu trận đấu chưa kết thúc, bắt đầu hiệp mới
+                if self.game_state == "IN_GAME":
+                    self.current_round += 1
+                    self.start_new_round()
+
+    def handle_round_result(self):
+        """Xác định người thắng hiệp và kiểm tra kết thúc trận đấu."""
+        round_winner = None
+        
+        # Hết giờ
+        if self.round_timer <= 0:
+            if self.player.hp > self.ai.hp:
+                round_winner = self.player
+            elif self.ai.hp > self.player.hp:
+                round_winner = self.ai
+        # Có người bị KO
+        else:
+            if self.ai.dead:
+                round_winner = self.player
+            elif self.player.dead:
+                round_winner = self.ai
+
+        # Cập nhật số hiệp thắng
+        if round_winner == self.player:
+            self.player_rounds_won += 1
+            print("Người chơi thắng hiệp!")
+        elif round_winner == self.ai:
+            self.ai_rounds_won += 1
+            print("AI thắng hiệp!")
+        else:
+            print("Hiệp đấu hòa!")
+
+        # Kiểm tra kết thúc trận đấu
+        if self.player_rounds_won == 2:
+            self.winner = self.player.name
+            self.game_state = "GAME_OVER"
+        elif self.ai_rounds_won == 2:
+            self.winner = self.ai.name
+            self.game_state = "GAME_OVER"
+        elif self.current_round == 3: # Xử lý sau 3 hiệp
+            if self.player_rounds_won > self.ai_rounds_won:
+                self.winner = self.player.name
+            elif self.ai_rounds_won > self.player_rounds_won:
+                self.winner = self.ai.name
+            else: # Hòa 1-1-1
+                self.winner = None # Sẽ hiển thị DRAW
+            self.game_state = "GAME_OVER"
     def draw(self):
         if self.game_state == "CHARACTER_SELECT":
             # Hàm vẽ giờ đây trả về các Rect để xử lý click
@@ -209,11 +285,12 @@ class Game:
             self.screen.blit(self.bg_stage_1, (0, 0))
             if self.player: self.player.draw(self.screen)
             if self.ai: self.ai.draw(self.screen)
-            if self.player and self.ai: draw_battle_hud(self.screen, self.player, self.ai)
+            
+            # === SỬA DÒNG NÀY ĐỂ TRUYỀN THAM SỐ MỚI ===
+            if self.player and self.ai: 
+                draw_battle_hud(self.screen, self.player, self.ai, self.round_timer, self.player_rounds_won, self.ai_rounds_won)
             
             if self.game_state == "GAME_OVER":
-                # === CẬP NHẬT LOGIC VẼ CHO GAME_OVER ===
-                # Hàm vẽ giờ sẽ trả về Rect của các nút để chúng ta có thể kiểm tra click
                 self.replay_button_rect, self.quit_button_rect = draw_game_over_screen(self.screen, self.winner)
 
         pygame.display.flip()

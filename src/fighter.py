@@ -14,16 +14,20 @@ class Fighter:
         self.max_hp = self.stats['max_hp']
         self.hp = self.max_hp
         self.max_sp = self.stats['max_sp']
-        self.sp = self.max_sp
+        self.sp = 0 # Bắt đầu mỗi trận với 0 SP
         self.speed = self.stats['speed']
         self.damage_reduction = self.stats['damage_reduction']
+
+        # ===> THÊM MỚI: Lưu vị trí bắt đầu <===
+        self.start_x = x
+        self.start_y = y
 
         self.action = 'idle'
         self.moving = False
         self.attacking = False
         self.defending = False
         self.hit = False
-        self.in_air = True
+        self.in_air = False # Bắt đầu trên mặt đất
         self.dead = False
         self.flip = not is_player_one
 
@@ -39,9 +43,7 @@ class Fighter:
         self.passive_sp_timer = pygame.time.get_ticks()
         
         self.vel_y = 0
-
-        # ===> THÊM MỚI: Biến để AI điều khiển <===
-        self.move_direction = 0 # -1: left, 1: right, 0: stop
+        self.move_direction = 0
 
         self.animation_speeds = self.stats.get('animation_speeds', {})
         self.animations = self.load_animations(self.stats['animations'])
@@ -53,7 +55,45 @@ class Fighter:
         self.anchor_y = y
         self.rect = pygame.Rect((x - 40, y - 90), (80, 180))
 
-    # ... (các hàm load_animations, can_act, set_action, gain_sp, use_sp, take_hit, attack, etc. giữ nguyên) ...
+    # ===> THÊM HÀM MỚI HOÀN TOÀN TẠI ĐÂY <===
+    def reset(self):
+        """Khôi phục lại trạng thái của nhân vật cho một hiệp mới."""
+        # Khôi phục chỉ số
+        self.hp = self.max_hp
+        self.sp = 0 # Bắt đầu mỗi hiệp với 0 SP
+        
+        # Đặt lại vị trí
+        self.anchor_x = self.start_x
+        self.anchor_y = self.start_y
+        self.rect.midbottom = (self.anchor_x, self.anchor_y)
+        
+        # Đặt lại trạng thái vật lý
+        self.vel_y = 0
+        self.in_air = False
+        
+        # Đặt lại tất cả các cờ hành động
+        self.dead = False
+        self.hit = False
+        self.attacking = False
+        self.defending = False
+        self.moving = False
+        self.rolling = False
+        
+        # Đặt lại trạng thái combo và AI
+        self.combo_step = 0
+        self.move_direction = 0
+
+        # Đặt lại timers
+        current_time = pygame.time.get_ticks()
+        self.last_attack_time = 0
+        self.roll_cooldown_timer = 0 # Cho phép lăn ngay khi bắt đầu hiệp
+        self.hit_stun_timer = 0
+        self.passive_sp_timer = current_time
+
+        # Đặt lại animation về trạng thái đứng yên
+        self.set_action('idle')
+        print(f"'{self.name}' đã được reset cho hiệp mới.")
+
     def load_animations(self, animation_paths):
         animation_dict = {}
         for action, path in animation_paths.items():
@@ -181,7 +221,6 @@ class Fighter:
             self.vel_y = JUMP_POWER
             self.in_air = True
     
-    # ===> NÂNG CẤP HÀM MOVE <===
     def move(self, target):
         dx, dy = 0, 0
         self.moving = False
@@ -191,9 +230,7 @@ class Fighter:
 
         keys = pygame.key.get_pressed()
 
-        # Xử lý input (Player hoặc AI)
         if not self.attacking and not self.hit:
-            # Nếu là người chơi, đọc bàn phím
             if self.is_player_one:
                 if keys[pygame.K_d] and not self.in_air:
                     self.defending = True
@@ -203,25 +240,22 @@ class Fighter:
                         dx = -self.speed; self.flip = True; self.moving = True
                     if keys[pygame.K_RIGHT]:
                         dx = self.speed; self.flip = False; self.moving = True
-            # Nếu là AI, đọc lệnh di chuyển
             else:
                 if self.move_direction == -1:
                     dx = -self.speed; self.flip = True; self.moving = True
                 elif self.move_direction == 1:
                     dx = self.speed; self.flip = False; self.moving = True
         
-        # Áp dụng vật lý (chung cho cả hai)
         self.vel_y += GRAVITY
         dy += self.vel_y
         
-        if self.anchor_y + dy > GROUND_Y:
+        if self.anchor_y + dy >= GROUND_Y:
             dy = GROUND_Y - self.anchor_y
             self.in_air = False
             self.vel_y = 0
         else:
-            self.in_air = True # Nếu không chạm đất -> đang ở trên không
+            self.in_air = True
         
-        # Xử lý va chạm (chung cho cả hai)
         if self.rect.left + dx < 0: dx = -self.rect.left
         if self.rect.right + dx > SCREEN_WIDTH: dx = SCREEN_WIDTH - self.rect.right
         
@@ -230,11 +264,9 @@ class Fighter:
         if temp_rect.colliderect(target.rect) and not self.in_air and not target.in_air:
             dx = 0
 
-        # Cập nhật vị trí
         self.anchor_x += dx
         self.anchor_y += dy
 
-    # ... (các hàm còn lại giữ nguyên) ...
     def update_timers(self):
         current_time = pygame.time.get_ticks()
         if self.hit and current_time - self.hit_stun_timer > self.current_stun_duration:
@@ -250,47 +282,45 @@ class Fighter:
     def update_animation(self):
         current_cooldown = self.animation_speeds.get(self.action, ANIMATION_COOLDOWN)
         
-        if self.action == 'death':
-            # Khi chết, animation death sẽ chạy hết các frame và dừng ở frame cuối cùng
-            if self.frame_index < len(self.animations.get('death', [])) - 1:
-                if pygame.time.get_ticks() - self.update_time > current_cooldown:
-                    self.update_time = pygame.time.get_ticks()
-                    self.frame_index += 1
-            # Không reset frame_index về 0 khi chết
-        elif self.frame_index >= len(self.animations.get(self.action, [])):
-            if self.action in ['1_atk', '2_atk', '3_atk', 'sp_atk', 'air_atk', 'take_hit', 'roll']:
-                if self.attacking: self.attacking = False
+        if self.frame_index >= len(self.animations.get(self.action, [])):
+            if self.action == 'death':
+                self.frame_index = len(self.animations[self.action]) - 1
+            elif self.action in ['1_atk', '2_atk', '3_atk', 'sp_atk', 'air_atk', 'take_hit', 'roll']:
+                self.attacking = False
+                self.hit = False
+                self.rolling = False
                 self.set_action('idle')
                 if self.action not in ['1_atk', '2_atk']: self.combo_step = 0
             else:
                 self.frame_index = 0
 
-        if self.action in self.animations and self.animations[self.action]:
-            self.image = self.animations[self.action][self.frame_index]
-            if pygame.time.get_ticks() - self.update_time > current_cooldown:
-                self.update_time = pygame.time.get_ticks(); self.frame_index += 1
-        else:
-             self.image = pygame.Surface((150, 300))
+        if pygame.time.get_ticks() - self.update_time > current_cooldown:
+            self.update_time = pygame.time.get_ticks()
+            self.frame_index += 1
+            
+        self.image = self.animations[self.action][self.frame_index % len(self.animations[self.action])]
 
     def update(self):
-        self.update_timers()
-        # Nếu chết thì chỉ chạy animation death, không chuyển sang trạng thái khác
+        # Xác định hành động dựa trên trạng thái
         if self.dead:
-            if self.action != 'death':
-                self.set_action('death')
-            # Không chuyển sang trạng thái khác khi chết
-            return
+            self.set_action('death')
         elif self.hit:
             self.set_action('take_hit')
         elif self.rolling:
             self.set_action('roll')
-        elif self.attacking: pass
-        elif self.defending: self.set_action('defend')
-        elif self.in_air: self.set_action('jump_up' if self.vel_y < 0 else 'jump_down')
-        elif self.moving: self.set_action('run')
-        else: self.set_action('idle')
-
+        elif self.attacking:
+            pass # Giữ nguyên animation tấn công đang diễn ra
+        elif self.defending:
+            self.set_action('defend')
+        elif self.in_air:
+            self.set_action('jump_up' if self.vel_y < 0 else 'jump_down')
+        elif self.moving:
+            self.set_action('run')
+        else:
+            self.set_action('idle')
+            
         self.update_animation()
+        self.update_timers()
         self.rect.midbottom = (self.anchor_x, self.anchor_y)
 
     def draw(self, surface):

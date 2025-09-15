@@ -103,22 +103,37 @@ def draw_difficulty_select_screen(surface, bg, cursor_pos):
 
     return rects[0], rects[1], rects[2] # Trả về Rect của 3 nút
 
-def draw_battle_hud(surface, player, ai):
+def draw_battle_hud(surface, player, ai, round_timer, player_wins, ai_wins):
     """Vẽ toàn bộ giao diện trong trận đấu (HUD)."""
-    # Giao diện người chơi (trái)
+    # === VẼ ĐỒNG HỒ ĐẾM NGƯỢC ===
+    seconds = max(0, round_timer // 1000)
+    draw_text(surface, str(seconds), 60, SCREEN_WIDTH // 2, 30)
+
+    # === GIAO DIỆN CHO NGƯỜI CHƠI (Bên trái) ===
     draw_text(surface, player.name, 22, 50, 20, align="topleft")
     draw_health_bar(surface, 50, 50, 300, 25, player.hp, player.max_hp)
     hp_text_player = f"{int(player.hp)} / {player.max_hp}"
     draw_text(surface, hp_text_player, 18, 50 + 150, 50 + 13)
     draw_sp_bar(surface, 50, 80, 250, 15, player.sp, player.max_sp)
+    # Vẽ chấm tròn hiệp thắng
+    for i in range(2):
+        pos_x = 50 + i * 30
+        color = YELLOW if i < player_wins else GRAY
+        pygame.draw.circle(surface, color, (pos_x, 110), 10)
+        pygame.draw.circle(surface, WHITE, (pos_x, 110), 10, 2) # Viền
 
-    # Giao diện AI (phải)
+    # === GIAO DIỆN CHO AI (Bên phải) ===
     draw_text(surface, ai.name, 22, SCREEN_WIDTH - 50, 20, align="topright")
     draw_health_bar(surface, SCREEN_WIDTH - 350, 50, 300, 25, ai.hp, ai.max_hp)
     hp_text_ai = f"{int(ai.hp)} / {ai.max_hp}"
     draw_text(surface, hp_text_ai, 18, (SCREEN_WIDTH - 350) + 150, 50 + 13)
     draw_sp_bar(surface, SCREEN_WIDTH - 300, 80, 250, 15, ai.sp, ai.max_sp)
-
+    # Vẽ chấm tròn hiệp thắng
+    for i in range(2):
+        pos_x = (SCREEN_WIDTH - 50) - i * 30
+        color = YELLOW if i < ai_wins else GRAY
+        pygame.draw.circle(surface, color, (pos_x, 110), 10)
+        pygame.draw.circle(surface, WHITE, (pos_x, 110), 10, 2) # Viền
 def draw_game_over_screen(surface, winner_name):
     """
     Vẽ màn hình Game Over với các nút có thể click.
