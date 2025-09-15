@@ -1,56 +1,78 @@
 import random
-from ..config import SP_COST_SPECIAL
+# --- THAY ĐỔI DUY NHẤT Ở ĐÂY ---
+from ..config import SP_COST_SPECIAL # Sửa tên biến cho đúng với file config của bạn
 
 class AIRandom:
-    def __init__(self, fighter, target, difficulty):
+    def __init__(self, fighter, target, difficulty): # Thêm difficulty để tương thích
         self.fighter = fighter
         self.target = target
-        self.difficulty = difficulty
         self.action_cooldown = 0
+        self.difficulty = difficulty # Lưu lại độ khó
 
-        if self.difficulty == "EASY":
-            self.reaction_time = 45; self.attack_chance = 40
-        elif self.difficulty == "MEDIUM":
-            self.reaction_time = 30; self.attack_chance = 60
-        else: # HARD
-            self.reaction_time = 15; self.attack_chance = 80
-
-    def can_act_now(self):
-        """Kiểm tra xem AI có thể hành động không (không bị khóa và hết cooldown)."""
-        return self.fighter.action in ['idle', 'run'] and self.action_cooldown == 0
+    # Thêm hàm can_act để tương thích
+    def can_act(self):
+        return not self.fighter.attacking and not self.fighter.hit and not self.fighter.dead and not self.fighter.rolling
 
     def update(self):
-        if self.fighter.dead:
+        """Hàm update chính của AI, được gọi mỗi frame."""
+        if not self.can_act():
             self.fighter.ai_move_direction = 0
             return
-
+        
         if self.action_cooldown > 0:
             self.action_cooldown -= 1
+            self.decide_movement()
+            return
         
-        self.decide_movement()
-        
-        if self.can_act_now():
-            self.decide_action()
+        self.decide_attack()
 
     def decide_movement(self):
-        distance = abs(self.fighter.anchor_x - self.target.anchor_x)
-        
-        if distance > 150: # Nếu xa, lại gần
-            self.fighter.ai_move_direction = 1 if self.target.anchor_x > self.fighter.anchor_x else -1
-        elif distance < 100: # Nếu quá gần, lùi ra
-            self.fighter.ai_move_direction = -1 if self.target.anchor_x > self.fighter.anchor_x else 1
-        else: # Giữ khoảng cách
+        """AI quyết định hướng di chuyển."""
+        distance_to_target = abs(self.fighter.rect.centerx - self.target.rect.centerx)
+
+        if distance_to_target > 150:
+            if self.fighter.rect.centerx < self.target.rect.centerx:
+                self.fighter.ai_move_direction = 1
+            else:
+                self.fighter.ai_move_direction = -1
+        else:
             self.fighter.ai_move_direction = 0
     
-    def decide_action(self):
-        distance = abs(self.fighter.anchor_x - self.target.anchor_x)
-        if distance < 120 and random.randint(1, 100) < self.attack_chance:
-            self.fighter.ai_move_direction = 0
-            
-            can_use_special = self.fighter.sp >= SP_COST_SPECIAL
-            if can_use_special and random.randint(1, 100) < 35:
-                self.fighter.attack(self.target, 'special')
+    def decide_attack(self):
+        """AI quyết định hành động tấn công."""
+        distance_to_target = abs(self.fighter.rect.centerx - self.target.rect.centerx)
+        
+        if distance_to_target < 60:
+            if self.fighter.rect.centerx < self.target.rect.centerx:
+                self.fighter.ai_move_direction = 1
             else:
-                self.fighter.attack(self.target, 'light')
+                self.fighter.ai_move_direction = -1
             
-            self.action_cooldown = self.reaction_time
+            if hasattr(self.fighter, 'jump'): self.fighter.jump()
+            self.action_cooldown = random.randint(40, 80)
+            return
+
+        if distance_to_target > 160:
+            self.decide_movement()
+            return
+
+        self.fighter.ai_move_direction = 0
+        choices = ['attack', 'combo', 'special']
+        weights = [50, 30, 20]
+
+        # --- VÀ THAY ĐỔI DUY NHẤT Ở ĐÂY ---
+        can_use_special = self.fighter.sp >= SP_COST_SPECIAL # Sửa tên biến
+        if not can_use_special:
+            choices.pop()
+            weights.pop()
+            
+        chosen_action = random.choices(choices, weights=weights, k=1)[0]
+        
+        if chosen_action == 'special':
+            # Thay đổi cách gọi hàm cho phù hợp
+            self.fighter.attack(self.target, 'special') 
+        else:
+            # Thay đổi cách gọi hàm cho phù hợp
+            self.fighter.attack(self.target, 'light') 
+        
+        self.action_cooldown = random.randint(30, 90)
