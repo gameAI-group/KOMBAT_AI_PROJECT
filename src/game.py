@@ -3,6 +3,7 @@ from .config import *
 from .fighter import Fighter
 from .ui import draw_character_select_screen, draw_difficulty_select_screen, draw_battle_hud, draw_game_over_screen
 from .ai.ai_random import AIRandom
+from .ai.ai_rule_based import AIRuleBased
 
 class Game:
     def __init__(self):
@@ -44,7 +45,8 @@ class Game:
     def reset_game(self):
         self.player = Fighter(self.player_choice, x=200, y=330, is_player_one=True)
         self.ai = Fighter(self.ai_choice, x=600, y=330, is_player_one=False)
-        self.ai_controller = AIRandom(self.ai, self.player, self.difficulty_choice)
+        # self.ai_controller = AIRandom(self.ai, self.player, self.difficulty_choice)
+        self.ai_controller = AIRuleBased(self.ai, self.player, self.difficulty_choice)
         self.player_rounds_won, self.ai_rounds_won, self.current_round = 0, 0, 1
         self.winner = None
         self.start_new_round()
