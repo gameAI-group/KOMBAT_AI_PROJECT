@@ -27,6 +27,11 @@ class AIRuleBased:
 		self.difficulty = (difficulty or "EASY").upper()
 		# số frame khóa di chuyển (khi chuẩn bị tấn công)
 		self.movement_block_frames = 0
+		# cho phép A hung hãn ngay lúc đầu (chạy áp sát) trong một khoảng thời gian ngắn
+		# điều này khiến hiệp sĩ lửa lao vào đối thủ ngay đầu round thay vì đứng yên
+		self.initial_aggression_frames = 60 if getattr(self.fighter, 'character_type', None) == 'A' else 0
+		# lưu lại anchor_x để phát hiện khi round được reset (bắt đầu round mới)
+		self._last_anchor_x = getattr(self.fighter, 'anchor_x', None)
 
 		# Điều chỉnh theo độ khó (ngưỡng và mức độ hung hãn)
 		if self.difficulty == 'HARD':
@@ -67,6 +72,11 @@ class AIRuleBased:
 			self.fighter.ai_move_direction = 0
 			self.counterattack_ready = False
 			self.last_hp = self.fighter.hp
+			# đảm bảo quay mặt về phía đối thủ khi phòng thủ
+			try:
+				self.fighter.flip = False if self.fighter.anchor_x < self.target.anchor_x else True
+			except Exception:
+				pass
 			return
 
 		# Phát hiện vừa bị đánh trúng → chuẩn bị phản công
@@ -105,6 +115,27 @@ class AIRuleBased:
 			self.movement_block_frames -= 1
 			self.fighter.ai_move_direction = 0
 
+		# Phát hiện round reset: nếu nhân vật được đưa về start_x, bật lại trạng thái hung hãn lúc đầu
+		start_x = getattr(self.fighter, 'start_x', None)
+		if start_x is not None and self.fighter.anchor_x == start_x and self._last_anchor_x != self.fighter.anchor_x:
+			if getattr(self.fighter, 'character_type', None) == 'A':
+				self.initial_aggression_frames = 60
+				# quay mặt về phía đối thủ khi round bắt đầu và A sẽ lao vào
+				try:
+					self.fighter.flip = False if self.fighter.anchor_x < self.target.anchor_x else True
+				except Exception:
+					pass
+
+		# Giảm dần bộ đếm hung hãn nếu còn hiệu lực
+		if self.initial_aggression_frames > 0:
+			self.initial_aggression_frames -= 1
+
+		# Cập nhật anchor_x cuối cùng để phát hiện round mới
+		try:
+			self._last_anchor_x = self.fighter.anchor_x
+		except Exception:
+			pass
+
 		# Nếu B đang thủ, giảm thời gian giữ thủ và bỏ khi đối thủ không tấn công
 		if self.fighter.character_type == 'B' and self.fighter.defending:
 			if not getattr(self.target, 'attacking', False):
@@ -133,6 +164,12 @@ class AIRuleBased:
 		# Nếu không thì quyết định hành động mới
 		self.decide_action()
 
+		# Cập nhật anchor_x cuối cùng để phát hiện round mới
+		try:
+			self._last_anchor_x = self.fighter.anchor_x
+		except Exception:
+			pass
+
 	def positioning(self):
 		# Căn chỉnh vị trí: tiếp cận hoặc giữ khoảng cách tùy vai trò
 		distance = abs(self.fighter.rect.centerx - self.target.rect.centerx)
@@ -144,11 +181,20 @@ class AIRuleBased:
 				self.fighter.ai_move_direction = 0
 		else:
 			# A (phòng thủ): giữ khoảng cách an toàn
-			safe_distance = self.close_range + 30
-			if distance < safe_distance:
-				self.fighter.ai_move_direction = -1 if self.fighter.rect.centerx < self.target.rect.centerx else 1
+			# Nếu còn thời gian hung hãn lúc đầu, thì áp sát giống B trong thời gian ngắn
+			if self.initial_aggression_frames > 0:
+				# Lao vào gần hơn bình thường (so với tầm đánh thường)
+				rush_target_distance = max(60, self.close_range - 40)  # vào gần hơn mức thường
+				if distance > rush_target_distance:
+					self.fighter.ai_move_direction = 1 if self.fighter.rect.centerx < self.target.rect.centerx else -1
+				else:
+					self.fighter.ai_move_direction = 0
 			else:
-				self.fighter.ai_move_direction = 0
+				safe_distance = self.close_range + 30
+				if distance < safe_distance:
+					self.fighter.ai_move_direction = -1 if self.fighter.rect.centerx < self.target.rect.centerx else 1
+				else:
+					self.fighter.ai_move_direction = 0
 
 	def decide_action(self):
 		distance = abs(self.fighter.rect.centerx - self.target.rect.centerx)
@@ -190,10 +236,18 @@ class AIRuleBased:
 			if self.fighter.character_type == 'B':
 				self.fighter.ai_move_direction = 1 if self.fighter.rect.centerx < self.target.rect.centerx else -1
 			else:
-				self.fighter.ai_move_direction = 0
+				# A bình thường đứng yên, nhưng khi còn hung hãn thì sẽ áp sát hơn
+				if self.initial_aggression_frames > 0:
+					rush_target_distance = max(60, self.close_range - 40)
+					if distance > rush_target_distance:
+						self.fighter.ai_move_direction = 1 if self.fighter.rect.centerx < self.target.rect.centerx else -1
+					else:
+						self.fighter.ai_move_direction = 0
+				else:
+					self.fighter.ai_move_direction = 0
 			return
 
-		# Ở gần: chọn tấn công (light/special) theo vai trò
+		# Khi đã ở gần: chọn tấn công (light/special) tùy vai trò
 		if self.fighter.character_type == 'B':
 			if self.fighter.sp >= SP_COST_SPECIAL and self.difficulty in ('MEDIUM', 'HARD'):
 				self.ensure_face_target()
@@ -222,7 +276,7 @@ class AIRuleBased:
 			self.action_cooldown = 20
 
 	def counterattack(self):
-		# Phản công có quy tắc: ưu tiên skill đặc biệt nếu có và khoảng cách phù hợp
+		# Phản công có quy tắc: ưu tiên chiêu đặc biệt nếu có và ở khoảng cách phù hợp
 		distance = abs(self.fighter.rect.centerx - self.target.rect.centerx)
 		in_range = distance <= (self.close_range + 20)
 		if self.fighter.sp >= SP_COST_SPECIAL and self.difficulty in ('MEDIUM', 'HARD') and in_range:
@@ -233,3 +287,21 @@ class AIRuleBased:
 		# Nếu không thì dùng đòn light để phản công nhanh
 		self.fighter.attack(self.target, 'light')
 		self.action_cooldown = 20
+
+	def on_round_start(self):
+		"""Được gọi khi round mới bắt đầu để AI khởi tạo lại trạng thái cho mỗi round."""
+		if getattr(self.fighter, 'character_type', None) == 'A':
+			self.initial_aggression_frames = 60
+			# quay mặt về phía đối thủ khi round bắt đầu và A sẽ lao vào
+			try:
+				self.fighter.flip = False if self.fighter.anchor_x < self.target.anchor_x else True
+			except Exception:
+				pass
+		# reset các cờ mặc định
+		self.movement_block_frames = 0
+		self.counterattack_ready = False
+		# cập nhật anchor_x hiện tại để phát hiện round tiếp theo
+		try:
+			self._last_anchor_x = self.fighter.anchor_x
+		except Exception:
+			pass
