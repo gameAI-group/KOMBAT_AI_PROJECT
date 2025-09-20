@@ -59,25 +59,6 @@
 	•	Bị stun (không thể điều khiển) trong thời gian stun_duration.
 	•	Trong trạng thái stun có thể Tech Roll nếu kịp input.
 
-⸻
-
-📊 So sánh nhanh giữa 2 nhân vật
-
-🔥 Char A – Kiếm Sĩ Lửa
-	•	HP cao (110), SP 100.
-	•	Đòn đặc biệt sát thương to, diện rộng.
-	•	Combo đơn giản nhưng damage ổn định.
-	•	Roll/defend tiêu chuẩn.
-
-🥷 Char B – Sát Thủ Tốc Độ
-	•	HP thấp (90), SP 100.
-	•	Combo nhanh, nhiều hit.
-	•	Đòn đặc biệt đánh nhiều lần, có dịch chuyển.
-	•	Thưởng SP khi kết thúc combo.
-	•	Cơ động hơn, dễ snowball nhưng rủi ro cao.
-
-⸻
-
 👉 Tổng kết:
 	•	Light/Combo → tạo nhịp độ và hồi SP.
 	•	Air Attack → kiểm soát không trung.
@@ -85,9 +66,10 @@
 	•	Defend → giảm damage, hồi SP khi block.
 	•	Roll/Tech Roll → cơ chế phòng thủ nâng cao, né chiêu hoặc thoát combo.
 	•	Passive SP → giữ game cân bằng, luôn có thể hồi SP dần dần.
-
 ⸻
 AIR ATTACK ĐÁNH TỐI ĐA TRÊN KHÔNG 2 LẦN, CÓ THỂ SỬ DỤNG SPECIAL ATTACK
 MỖI 5s sau nếu đủ sp thì sẽ sử dụng đc lại chiêu đặc biệt
 NẾU BẤM VÀO D - PHÒNG THỦ THÌ SẼ DÃ Ở THẾ THỦ KO PHẢI LÀ ĂN HIT
-NẾU ĐANG BỊ ĐÁNH ÁP SÁT CÓ THỂ BẤM SPACE LƯỚT QUA ĐỐI THỦ TUY TỐN NHIỀU MANA HƠN
+NẾU ĐANG BỊ ĐÁNH ÁP SÁT CÓ THỂ BẤM SPACE LƯỚT QUA ĐỐI THỦ TUY TỐN NHIỀU MANA 
+ĐÃ GIÚP HIỆP SĨ CHẬM TÍ
+TẠO VÙNG TẤN CÔNG CHIÊU ĐẶC BIỆT RIÊNG CHO A VÀ B, NẾU KO NẰM TRONG VÙNG ĐÓ MỚI BỊ MẤT MÁU( NẾU MUỐN THẤY VÙNG ĐÓ THÌ Ở fighter.py cái DEBUG_DRAW = False biến thành DEBUG_DRAW = True )
