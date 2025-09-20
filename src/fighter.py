@@ -1,7 +1,7 @@
 import pygame, os, random
 from .config import *
 
-DEBUG_DRAW = True
+DEBUG_DRAW = False
 
 class Fighter:
     def __init__(self, character_type, x, y, is_player_one):

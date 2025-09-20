@@ -58,7 +58,7 @@ CHAR_A_STATS = {
         'defend': 'assets/images/character_a/09_defend/', 'roll': 'assets/images/character_a/04_roll/',
         'take_hit': 'assets/images/character_a/10_take_hit/', 'death': 'assets/images/character_a/11_death/'
     },
-    'animation_speeds': { 'light1': 30, 'light2': 25, 'light3': 25, 'take_hit': 50, 'death': 150, 'defend': 60,'roll': 90  },
+    'animation_speeds': { 'light1': 30, 'light2': 25, 'light3': 30, 'take_hit': 50, 'death': 150, 'defend': 60,'roll': 90  },
     'hold_frames': { 'defend': 8 }
 }
 CHAR_B_STATS = {
