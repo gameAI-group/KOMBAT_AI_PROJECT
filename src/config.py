@@ -14,20 +14,28 @@ ROUND_OVER_DELAY = 3000 # 3 giây nghỉ giữa các hiệp
 # --- VẬT LÝ VÀ COMBAT ---
 GRAVITY = 1; JUMP_POWER = -18; GROUND_Y = 550
 DEFAULT_HIT_STUN = 200 # 0.2s
-ROLL_DURATION =  350 # 0.4s
-ROLL_COOLDOWN_DURATION = 180 # Thời gian hồi chiêu 3 giây
-ROLL_SPEED = 8# Tốc độ của cú lướt
+ROLL_DURATION =  350 # Tổng thời gian của hành động lướt (0.35s)
+ROLL_COOLDOWN_DURATION = 180 # Thời gian hồi chiêu
+ROLL_SPEED = 8 # Tốc độ của cú lướt
 COMBO_TIMEOUT = 400
 
+# --- CÀI ĐẶT I-FRAME CHO ROLL ---
+ROLL_IFRAME_START = 50      # Bất tử bắt đầu sau 50ms (khung hình khởi động)
+ROLL_IFRAME_DURATION = 200  # Bất tử kéo dài trong 200ms
 
+# --- CÀI ĐẶT HỒI CHIÊU ĐẶC BIỆT ---
+SPECIAL_ATTACK_COOLDOWN = 5000 # 10 giây (tính bằng mili-giây)
+
+# --- MỚI: CÀI ĐẶT CHO "TECH ROLL" (LƯỚT KHI BỊ ĐÁNH) ---
+TECH_ROLL_WINDOW = 150 # Cửa sổ 150ms sau khi trúng đòn để có thể lướt
+SP_COST_TECH_ROLL = 35 # Chi phí SP cao hơn cho hành động này
 
 # --- CÀI ĐẶT SP ---
 PASSIVE_SP_GAIN_RATE = 3000; PASSIVE_SP_GAIN_AMOUNT = 1
 SP_COST_SPECIAL = 45
-SP_COST_ROLL = 25 # Chi phí SP cho mỗi lần roll
+SP_COST_ROLL = 25 # Chi phí SP cho mỗi lần roll thông thường
 
-# --- CHỈ SỐ NHÂN VẬT (LẤY TỪ LUẬT CHƠI) ---
-# Dữ liệu cho Nhân vật A ("Người Bảo Hộ Kiên Cường")
+# ... (Phần còn lại của file giữ nguyên) ...
 CHAR_A_STATS = {
     'name': "Kiếm Sĩ Lửa", 'max_hp': 110, 'max_sp': 100, 'speed': 4, 'air_speed': 5,
     'defense_modifier': 0.4, 'sp_gain_on_block': 8,
@@ -53,8 +61,6 @@ CHAR_A_STATS = {
     'animation_speeds': { 'light1': 30, 'light2': 25, 'light3': 25, 'take_hit': 50, 'death': 150, 'defend': 60,'roll': 90  },
     'hold_frames': { 'defend': 8 }
 }
-
-# Dữ liệu cho Nhân vật B ("Sát Thủ Tốc Độ")
 CHAR_B_STATS = {
     'name': "Sát Thủ Tốc Độ", 'max_hp': 90, 'max_sp': 100, 'speed': 4.6, 'air_speed': 6,
     'defense_modifier': 0.6, 'sp_gain_on_combo_finish': 10,
@@ -82,8 +88,6 @@ CHAR_B_STATS = {
     'animation_speeds': { 'light1': 25, 'light2': 25, 'light3': 30, 'special': 25, 'air': 40, 'death': 100, 'defend': 60,'roll': 80  },
     'hold_frames': { 'defend': 5 }
 }
-
-# --- ĐƯỜNG DẪN TÀI NGUYÊN ---
 FONT_PATH = 'assets/fonts/main_font.ttf'
 BG_MAIN_MENU = 'assets/images/backgrounds/main_menu_bg.png'
 BG_CHAR_SELECT = 'assets/images/backgrounds/char_select_bg.png'
