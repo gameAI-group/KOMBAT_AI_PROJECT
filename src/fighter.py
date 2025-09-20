@@ -1,7 +1,7 @@
-import pygame, os, random # <-- THÊM 'random' VÀO ĐÂY
+import pygame, os, random
 from .config import *
 
-DEBUG_DRAW = False
+DEBUG_DRAW = True
 
 class Fighter:
     def __init__(self, character_type, x, y, is_player_one):
@@ -32,7 +32,6 @@ class Fighter:
         self.attack_hitbox_width = 100; self.attack_hitbox_height = 170
         self.attack_hitbox_offset_x = 10; self.attack_hitbox_offset_y = -170
 
-    # ... (reset, load_animations, can_act, load_frames, gain_sp, use_sp giữ nguyên) ...
     def reset(self):
         self.hp = self.max_hp
         self.sp = self.max_sp
@@ -85,68 +84,68 @@ class Fighter:
         can_act = not self.attacking and not self.hit and not self.defending and not self.rolling and not self.dead
         if not can_act or self.attack_cooldown > 0: return
 
+        # --- SỬA ĐỔI: LOGIC TẤN CÔNG TRÊN KHÔNG ĐƯỢC ƯU TIÊN XỬ LÝ ---
         if self.in_air:
+            # Xử lý đòn đánh thường trên không
             if attack_type == 'air' and 'air' in self.attacks and self.air_attacks_left > 0:
                 self.perform_attack('air', target)
                 self.air_attacks_left -= 1
-            return
-        
-        # --- LOGIC CHIÊU ĐẶC BIỆT CỦA SÁT THỦ ĐÃ THAY ĐỔI HOÀN TOÀN ---
+            # --- MỚI: CHO PHÉP CHIÊU ĐẶC BIỆT TRÊN KHÔNG ---
+            elif attack_type == 'special' and 'special' in self.attacks:
+                # Logic đặc biệt của Sát Thủ B cũng áp dụng trên không
+                if self.character_type == 'B':
+                    if not self.use_sp(SP_COST_SPECIAL): return
+                    attack_data = self.attacks['special']; range_info = attack_data.get('range_box')
+                    if not range_info: return
+                    range_w, range_h = range_info['size']; offset_x, offset_y = range_info['offset']
+                    if not self.flip: range_x = self.rect.right + offset_x
+                    else: range_x = self.rect.left - range_w - offset_x
+                    range_y = self.rect.y + offset_y
+                    range_rect = pygame.Rect(range_x, range_y, range_w, range_h)
+                    if range_rect.colliderect(target.hurtbox): self.perform_attack('special', target=target)
+                    else:
+                        rand_x = random.randint(range_rect.left, range_rect.right)
+                        self.perform_attack('special', destination_pos=(rand_x, self.anchor_y)) # Giữ nguyên Y
+                # Các nhân vật khác
+                else:
+                    if self.use_sp(SP_COST_SPECIAL):
+                        self.perform_attack('special', target)
+            return # Dừng hàm sau khi xử lý tấn công trên không
+
+        # --- LOGIC TẤN CÔNG MẶT ĐẤT ---
         if attack_type == 'special':
-            # Sát thủ (Character B) - Logic tấn công trúng/hụt
             if self.character_type == 'B':
-                # Bất kể trúng hay hụt, phải đủ SP để thử. Nếu không đủ thì không làm gì cả.
-                if not self.use_sp(SP_COST_SPECIAL):
-                    return
-
-                attack_data = self.attacks['special']
-                range_info = attack_data.get('range_box')
+                if not self.use_sp(SP_COST_SPECIAL): return
+                attack_data = self.attacks['special']; range_info = attack_data.get('range_box')
                 if not range_info: return
-
-                # Tạo vùng hitbox kiểm tra tầm đánh
-                range_w, range_h = range_info['size']
-                offset_x, offset_y = range_info['offset']
+                range_w, range_h = range_info['size']; offset_x, offset_y = range_info['offset']
                 if not self.flip: range_x = self.rect.right + offset_x
                 else: range_x = self.rect.left - range_w - offset_x
                 range_y = self.rect.y + offset_y
                 range_rect = pygame.Rect(range_x, range_y, range_w, range_h)
-
-                # KIỂM TRA: Nếu đối thủ trong tầm -> tấn công trúng
                 if range_rect.colliderect(target.hurtbox):
                     self.perform_attack('special', target=target)
-                # NẾU KHÔNG -> tấn công hụt (dịch chuyển tới vị trí ngẫu nhiên)
                 else:
-                    # Chọn một điểm X ngẫu nhiên trong vùng tầm đánh
                     rand_x = random.randint(range_rect.left, range_rect.right)
-                    # Giữ nguyên Y để không bị lơ lửng
-                    rand_y = self.anchor_y 
-                    self.perform_attack('special', destination_pos=(rand_x, rand_y))
-            
-            # Các nhân vật khác (Kiếm Sĩ) - Giữ logic cũ
+                    self.perform_attack('special', destination_pos=(rand_x, self.anchor_y))
             else:
                 if self.use_sp(SP_COST_SPECIAL):
                     self.perform_attack('special', target)
-        
+
         elif attack_type == 'light':
             self.combo_step = 1
             self.perform_attack('light1', target)
             self.combo_input_timer = 0
 
-    # --- SỬA ĐỔI PHƯƠNG THỨC NÀY ---
     def perform_attack(self, attack_type, target=None, destination_pos=None):
-        # Logic dịch chuyển của Sát Thủ được ưu tiên xử lý trước
         if attack_type == 'special' and self.character_type == 'B':
-            # Trường hợp 1: Tấn công hụt, có tọa độ đích
             if destination_pos:
-                # Cập nhật hướng nhìn dựa trên vị trí mới
                 self.flip = (destination_pos[0] < self.anchor_x)
                 self.anchor_x, self.anchor_y = destination_pos[0], destination_pos[1]
-            # Trường hợp 2: Tấn công trúng, có mục tiêu
             elif target is not None:
                 if self.anchor_x < target.anchor_x: self.anchor_x = target.anchor_x - 80; self.flip = False
                 else: self.anchor_x = target.anchor_x + 80; self.flip = True
-        
-        # Các logic còn lại giữ nguyên cho tất cả các đòn đánh
+
         self.attacking = True; self.action = attack_type
         self.frame_index = 0; self.update_time = pygame.time.get_ticks()
         self.attack_timer = pygame.time.get_ticks()
@@ -154,7 +153,6 @@ class Fighter:
         attack_data = self.attacks.get(attack_type, {})
         self.attack_cooldown = attack_data.get('cooldown', 30)
 
-    # ... (Các phương thức còn lại: check_attack_collision, create_and_check_hitbox, take_hit, v.v. giữ nguyên) ...
     def check_attack_collision(self, target):
         if not self.attacking: self.hitbox = None; return
         attack_data = self.attacks.get(self.action)
@@ -206,7 +204,7 @@ class Fighter:
 
     def roll(self):
         can_roll = (self.roll_cooldown_timer == 0 and not self.attacking and not self.hit
-                    and not self.defending)
+                    and not self.defending and not self.in_air) # Thêm điều kiện không thể lướt trên không
         if can_roll:
             if self.use_sp(SP_COST_ROLL):
                 self.rolling = True; self.roll_timer = pygame.time.get_ticks(); self.roll_velocity_x = ROLL_SPEED
@@ -231,7 +229,8 @@ class Fighter:
                 if pygame.time.get_ticks() - self.passive_sp_timer > PASSIVE_SP_GAIN_RATE:
                     self.gain_sp(PASSIVE_SP_GAIN_AMOUNT); self.passive_sp_timer = pygame.time.get_ticks()
             if self.attacking:
-                if pygame.time.get_ticks() - self.attack_timer > self.attacks[self.action]['duration']:
+                attack_duration = self.attacks.get(self.action, {}).get('duration', 500)
+                if pygame.time.get_ticks() - self.attack_timer > attack_duration:
                     is_next_combo_input_valid = (self.combo_input_timer > 0 and pygame.time.get_ticks() - self.combo_input_timer < COMBO_TIMEOUT)
                     if 'light' in self.action and is_next_combo_input_valid:
                         self.combo_step += 1
@@ -292,8 +291,15 @@ class Fighter:
             current_speed = self.air_speed if self.in_air else self.speed
             if self.ai_move_direction == -1: dx = -current_speed; self.flip = True; self.moving = True
             elif self.ai_move_direction == 1: dx = current_speed; self.flip = False; self.moving = True
-        if (self.attacking and self.action == 'air') or self.rolling: self.vel_y = 0
-        else: self.vel_y += GRAVITY
+        
+        # --- SỬA ĐỔI: TẠM DỪNG RƠI KHI TẤN CÔNG TRÊN KHÔNG ---
+        # Nếu đang tấn công trên không hoặc đang lướt, không áp dụng trọng lực
+        if (self.attacking and self.in_air) or self.rolling:
+            self.vel_y = 0
+        else:
+            # Áp dụng trọng lực như bình thường
+            self.vel_y += GRAVITY
+        
         dy += self.vel_y
         if self.rect.left + dx < 0: dx = -self.rect.left
         if self.rect.right + dx > SCREEN_WIDTH: dx = SCREEN_WIDTH - self.rect.right
