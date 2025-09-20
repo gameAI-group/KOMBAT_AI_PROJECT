@@ -33,7 +33,7 @@ class AIHeuristic:
     def _get_player_current_action(self) -> str:
         """Phân tích và trả về hành động hiện tại của người chơi."""
         if self.player.attacking:
-            # Dựa vào self.action của player để biết chính xác đòn tấn công
+            # Dựa vào self.action của player để biết chính xác đòn tấn công nào đang dùng
             if 'special' in self.player.action: return 'special_attack'
             if 'air' in self.player.action: return 'air_attack'
             return 'light_attack' # Bao gồm light1, light2, light3
