@@ -1,9 +1,12 @@
 import pygame
 from .config import *
 
-def draw_text(surface, text, size, x, y, color=WHITE, align="center"):
-    try: font = pygame.font.Font(FONT_PATH, size)
-    except: font = pygame.font.Font(None, size)
+def draw_text_custom_font(surface, font_path, text, size, x, y, color=WHITE, align="center"):
+    """Hàm vẽ chữ với font tùy chỉnh."""
+    try: font = pygame.font.Font(font_path, size)
+    except Exception as e:
+        print(f"Lỗi tải font {font_path}: {e}")
+        font = pygame.font.Font(None, size)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
     if align == "center": text_rect.center = (x, y)
@@ -11,6 +14,46 @@ def draw_text(surface, text, size, x, y, color=WHITE, align="center"):
     elif align == "topright": text_rect.topright = (x, y)
     surface.blit(text_surface, text_rect)
     return text_rect
+
+def draw_text(surface, text, size, x, y, color=WHITE, align="center"):
+    return draw_text_custom_font(surface, FONT_PATH, text, size, x, y, color, align)
+
+def draw_main_menu_screen(surface, bg):
+    """Vẽ màn hình menu chính."""
+    surface.blit(bg, (0, 0))
+    
+    # Vẽ tiêu đề game
+    draw_text_custom_font(surface, FONT_TITLE_PATH, "KOMBAT AI", 90, SCREEN_WIDTH // 2, 150, YELLOW)
+
+    # Vẽ các nút
+    button_w, button_h = 280, 60
+    button_x = SCREEN_WIDTH // 2
+    
+    start_rect = pygame.Rect(0, 0, button_w, button_h)
+    start_rect.center = (button_x, 300)
+    pygame.draw.rect(surface, GREEN, start_rect, border_radius=10)
+    draw_text(surface, "START", 30, start_rect.centerx, start_rect.centery, color=BLACK)
+
+    guide_rect = pygame.Rect(0, 0, button_w, button_h)
+    guide_rect.center = (button_x, 380)
+    pygame.draw.rect(surface, WHITE, guide_rect, border_radius=10)
+    draw_text(surface, "HƯỚNG DẪN", 30, guide_rect.centerx, guide_rect.centery, color=BLACK)
+
+    exit_rect = pygame.Rect(0, 0, button_w, button_h)
+    exit_rect.center = (button_x, 460)
+    pygame.draw.rect(surface, RED, exit_rect, border_radius=10)
+    draw_text(surface, "THOÁT", 30, exit_rect.centerx, exit_rect.centery, color=BLACK)
+    
+    return start_rect, guide_rect, exit_rect
+def draw_round_announcement(surface, text):
+    """Vẽ thông báo lớn giữa màn hình (Round 1, 3, 2, 1, FIGHT!)."""
+    # Vẽ một lớp phủ mờ để làm nổi bật chữ
+    overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 120))
+    surface.blit(overlay, (0, 0))
+    
+    # Vẽ chữ
+    draw_text_custom_font(surface, FONT_TITLE_PATH, text, 100, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, YELLOW)
 
 def draw_health_bar(surface, x, y, width, height, hp, max_hp):
     ratio = max(0, hp / max_hp)

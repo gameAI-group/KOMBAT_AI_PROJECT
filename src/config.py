@@ -88,10 +88,28 @@ CHAR_B_STATS = {
     'animation_speeds': { 'light1': 25, 'light2': 25, 'light3': 30, 'special': 25, 'air': 40, 'death': 100, 'defend': 60,'roll': 80  },
     'hold_frames': { 'defend': 5 }
 }
+# --- ĐƯỜNG DẪN TÀI NGUYÊN ---
 FONT_PATH = 'assets/fonts/main_font.ttf'
+FONT_TITLE_PATH = 'assets/fonts/BoldPixels.ttf' # Font cho tiêu đề game
+
 BG_MAIN_MENU = 'assets/images/backgrounds/main_menu_bg.png'
 BG_CHAR_SELECT = 'assets/images/backgrounds/char_select_bg.png'
 BG_STAGE_1 = 'assets/images/backgrounds/stage_01.png'
+
 PORTRAIT_A = 'assets/images/character_a/portrait.png'
 PORTRAIT_B = 'assets/images/character_b/portrait.png'
 CURSOR_P1 = 'assets/images/ui/p1_cursor.png'
+
+MUSIC_MENU = 'assets/audio/music/menu_music.mp3'
+MUSIC_BATTLE = 'assets/audio/music/battle_music.mp3'
+# --- MỚI: ĐƯỜNG DẪN HIỆU ỨNG ÂM THANH ---
+SFX_ROUND_1 = 'assets/audio/sfx/round1.wav'
+SFX_ROUND_2 = 'assets/audio/sfx/round2.wav'
+SFX_FINAL_ROUND = 'assets/audio/sfx/final_round.wav'
+SFX_COUNTDOWN = 'assets/audio/sfx/countdown.wav'
+SFX_FIGHT = 'assets/audio/sfx/fight.wav'
+
+# --- MỚI: CÀI ĐẶT CHO ĐẾM NGƯỢC ---
+ROUND_ANNOUNCE_DURATION = 2000 # Thời gian hiển thị "Round X" (2 giây)
+COUNTDOWN_STEP_DURATION = 1000 # Thời gian mỗi bước đếm ngược "3, 2, 1" (1 giây)
+FIGHT_ANNOUNCE_DURATION = 1000 # Thời gian hiển thị "FIGHT!" (1 giây)
