@@ -223,3 +223,110 @@ class DamageText(pygame.sprite.Sprite):
 
         alpha = 255 - (elapsed_time / self.duration) * 255
         self.image.set_alpha(max(0, alpha))
+
+# --- HÀM VẼ MÀN HÌNH HƯỚNG DẪN ĐÃ ĐƯỢC NÂNG CẤP ---
+# --- HÀM VẼ MÀN HÌNH HƯỚNG DẪN ĐÃ ĐƯỢC NÂNG CẤP ---
+# --- HÀM VẼ MÀN HÌNH HƯỚNG DẪN ĐÃ ĐƯỢC NÂNG CẤP ---
+def draw_guide_screen(surface, bg, scroll_y):
+    surface.blit(bg, (0, 0))
+    overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, 200))
+    surface.blit(overlay, (0, 0))
+
+    # --- CÁC BIẾN ĐỂ CĂN CHỈNH LAYOUT ---
+    content_x = 50
+    content_width = SCREEN_WIDTH - 100
+    line_height = 35
+    section_spacing = 40
+    text_color = (220, 220, 220)
+    
+    current_y = 60 + scroll_y
+
+    # --- TIÊU ĐỀ CHÍNH ---
+    draw_text_custom_font(surface, FONT_TITLE_PATH, "HƯỚNG DẪN", 60, SCREEN_WIDTH // 2, current_y, YELLOW)
+    current_y += 80
+
+    # ... (toàn bộ phần nội dung hướng dẫn giữ nguyên) ...
+    # --- PHẦN 1: GIỚI THIỆU ---
+    draw_text(surface, "GIỚI THIỆU", 28, SCREEN_WIDTH // 2, current_y, color=WHITE)
+    current_y += line_height
+    intro_text = "Chào mừng đến với Đấu Trường AI, nơi những chiến binh vĩ đại nhất đối đầu với trí tuệ nhân tạo ưu việt. Hãy chứng tỏ kỹ năng, phản xạ và chiến thuật của bạn để giành lấy vinh quang!"
+    words = intro_text.split(' ')
+    line = ""
+    for word in words:
+        if draw_text(surface, line + word, 20, 0, 0).width > content_width:
+            draw_text(surface, line, 20, SCREEN_WIDTH // 2, current_y, color=text_color)
+            line = word + " "
+            current_y += 25
+        else:
+            line += word + " "
+    draw_text(surface, line, 20, SCREEN_WIDTH // 2, current_y, color=text_color)
+    current_y += section_spacing
+
+    # --- PHẦN 2: LUẬT CHƠI CƠ BẢN ---
+    draw_text(surface, "LUẬT CHƠI", 28, SCREEN_WIDTH // 2, current_y, color=WHITE)
+    current_y += line_height
+    rules = [
+        "- Mục tiêu: Hạ gục đối thủ AI trong một trận đấu đối kháng.",
+        "- Thể thức: Best of 3 (Đấu 3 hiệp, thắng 2 là người chiến thắng chung cuộc).",
+        "- Máu (HP): Thanh màu đỏ. Khi HP về 0, bạn thua hiệp đó.",
+        "- Năng lượng (SP): Thanh màu xanh. Cần thiết để dùng chiêu đặc biệt và lướt né."
+    ]
+    for rule in rules:
+        draw_text(surface, rule, 20, content_x, current_y, color=text_color, align="topleft")
+        current_y += 30
+    current_y += section_spacing - 20
+
+    # --- PHẦN 3: ĐIỀU KHIỂN ---
+    draw_text(surface, "ĐIỀU KHIỂN TRẬN ĐẤU", 28, SCREEN_WIDTH // 2, current_y, color=WHITE)
+    current_y += line_height
+    key_x = SCREEN_WIDTH // 2 - 150
+    desc_x = SCREEN_WIDTH // 2 - 130
+    
+    controls = [
+        ("Phím [TRÁI] / [PHẢI]", ": Di chuyển Trái / Phải", GREEN),
+        ("Phím [LÊN]", ": Nhảy (Nhấn 2 lần để nhảy đôi)", GREEN),
+        ("Phím [A]", ": Tấn công thường (Nhấn liên tục để combo)", RED),
+        ("Phím [F]", ": Chiêu đặc biệt (Tốn nhiều SP)", RED),
+        ("Phím [D] (Giữ)", ": Đỡ đòn (Giảm sát thương nhận vào)", BLUE),
+        ("Phím [SPACE]", ": Lướt né (Tốn ít SP, có khoảnh khắc bất tử)", BLUE)
+    ]
+    for key, desc, color in controls:
+        draw_text(surface, key, 22, key_x, current_y, align="topright", color=color)
+        draw_text(surface, desc, 22, desc_x, current_y, align="topleft", color=text_color)
+        current_y += line_height
+    current_y += section_spacing
+
+    # --- PHẦN 4: MẸO CHƠI GAME ---
+    draw_text(surface, "MẸO & CHIẾN THUẬT", 28, SCREEN_WIDTH // 2, current_y, color=WHITE)
+    current_y += line_height
+    tips = [
+        "1. Quản lý SP là chìa khóa: Đừng dùng chiêu đặc biệt và lướt né bừa bãi. SP cũng tự hồi phục chậm theo thời gian.",
+        "2. Tận dụng Combo: Đòn tấn công thường có thể kết hợp thành chuỗi (combo) gây nhiều sát thương hơn.",
+        "3. Phòng thủ thông minh: Giữ đỡ đòn khi đối thủ tấn công. Lướt né (roll) đúng lúc có thể giúp bạn thoát khỏi tình huống nguy hiểm và phản công.",
+        "4. Tấn công trên không: Nhảy và tấn công để tạo bất ngờ cho đối thủ.",
+        "5. Quan sát đối thủ: Học hỏi cách ra đòn của AI để tìm ra sơ hở và thời điểm tấn công hợp lý."
+    ]
+    for tip in tips:
+        words = tip.split(' ')
+        line = ""
+        for word in words:
+            if draw_text(surface, line + word, 20, 0, 0).width > content_width:
+                draw_text(surface, line, 20, content_x, current_y, color=text_color, align="topleft")
+                line = word + " "
+                current_y += 25
+            else:
+                line += word + " "
+        draw_text(surface, line, 20, content_x, current_y, color=text_color, align="topleft")
+        current_y += 35
+
+    # --- NÚT QUAY LẠI ---
+    back_button_rect = pygame.Rect(0, 0, 250, 50)
+    back_button_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT - 50)
+    pygame.draw.rect(surface, WHITE, back_button_rect, border_radius=10)
+    draw_text(surface, "QUAY LẠI (ESC)", 22, back_button_rect.centerx, back_button_rect.centery, color=BLACK)
+
+    # --- HƯỚNG DẪN CUỘN (ĐÃ THAY ĐỔI) ---
+    draw_text(surface, "Dùng phím LÊN/XUỐNG hoặc CUỘN CHUỘT để xem", 18, SCREEN_WIDTH // 2, 25, color=YELLOW)
+
+    return back_button_rect

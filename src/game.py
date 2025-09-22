@@ -3,12 +3,12 @@ from .config import *
 from .fighter import Fighter
 from .ui import (draw_main_menu_screen, draw_character_select_screen,
                  draw_difficulty_select_screen, draw_battle_hud,
-                 draw_game_over_screen, draw_round_announcement, DamageText)
+                 draw_game_over_screen, draw_round_announcement, DamageText,
+                 draw_guide_screen) # Thêm draw_guide_screen
 from .ai.ai_random import AIRandom
 from .ai.ai_rulebased import AIRuleBased
 
 def load_animation_frames(path):
-    """Hàm trợ giúp để tải tất cả các frame từ một thư mục animation."""
     if not os.path.isdir(path):
         print(f"Cảnh báo: Không tìm thấy thư mục animation: {path}")
         return []
@@ -39,12 +39,9 @@ class Game:
         self.cursor_frame_index = 0
         self.cursor_anim_timer = 0
         
-        # Thêm biến timer cho việc xác nhận
         self.confirmation_timer = 0
 
-        # --- MỚI: Tạo group để quản lý số sát thương ---
         self.damage_text_group = pygame.sprite.Group()
-        # Tạo font chữ cho số sát thương
         self.damage_font = pygame.font.Font(FONT_PATH, 28)
 
         self.load_assets()
@@ -58,6 +55,7 @@ class Game:
 
         # Biến cho các trạng thái game
         self.start_button_rect, self.guide_button_rect, self.exit_button_rect = None, None, None
+        self.back_button_rect = None # Nút quay lại từ màn hình guide
         self.p1_cursor_pos = 0; self.difficulty_cursor_pos = 0
         self.player_choice = None; self.ai_choice = None; self.difficulty_choice = None
         self.char_a_rect, self.char_b_rect = None, None
@@ -70,6 +68,10 @@ class Game:
         self.winner = None
         self.round_start_sequence_timer = 0
         self.round_announcement_text = ""; self.round_announcement_step = 0
+        
+        # --- MỚI: Biến cho việc cuộn trong màn hình hướng dẫn ---
+        self.guide_scroll_y = 0
+        self.guide_max_scroll = GUIDE_CONTENT_HEIGHT - SCREEN_HEIGHT # Tính toán giới hạn cuộn
 
     def load_assets(self):
         try:
@@ -109,7 +111,6 @@ class Game:
         self.char_stats = {'A': CHAR_A_STATS, 'B': CHAR_B_STATS}
 
     def reset_game(self):
-        # Sửa đổi ở đây để truyền đúng character_type
         self.player = Fighter(self.player_choice, 200, 330, is_player_one=True)
         self.ai = Fighter(self.ai_choice, 600, 330, is_player_one=False)
 
@@ -137,7 +138,6 @@ class Game:
              if self.current_round == 1: self.sfx['round1'].play()
              else: self.sfx['round2'].play()
 
-    # --- HÀM update_round_start_sequence ĐÃ ĐƯỢC THAY ĐỔI ---
     def update_round_start_sequence(self):
         elapsed = pygame.time.get_ticks() - self.round_start_sequence_timer
 
@@ -153,7 +153,6 @@ class Game:
         elif self.round_announcement_step == 3 and elapsed > COUNTDOWN_STEP_DURATION:
             self.round_announcement_text = "FIGHT!"; self.sfx['fight'].play()
             
-            # THAY ĐỔI 1: Chuyển đoạn code phát nhạc lên đây
             try:
                 pygame.mixer.music.load(MUSIC_BATTLE)
                 pygame.mixer.music.play(-1)
@@ -164,12 +163,12 @@ class Game:
         elif self.round_announcement_step == 4 and elapsed > FIGHT_ANNOUNCE_DURATION:
             self.game_state = "IN_GAME"
             self.round_start_time = pygame.time.get_ticks()
-            # THAY ĐỔI 2: Xóa đoạn code phát nhạc ở đây đi
 
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT: self.running = False
             if self.game_state == "MAIN_MENU": self.handle_main_menu_input(event)
+            elif self.game_state == "GUIDE": self.handle_guide_input(event) # --- MỚI ---
             elif self.game_state == "CHARACTER_SELECT": self.handle_character_selection(event)
             elif self.game_state == "DIFFICULTY_SELECT": self.handle_difficulty_selection(event)
             elif self.game_state == "IN_GAME": self.handle_in_game_input(event)
@@ -184,11 +183,49 @@ class Game:
                     pygame.mixer.music.play(-1)
                 except pygame.error as e:
                     print(f"Cảnh báo: Không tải được nhạc chọn nhân vật: {e}")
+            # --- THAY ĐỔI: Chuyển sang màn hình hướng dẫn ---
+            if self.guide_button_rect and self.guide_button_rect.collidepoint(event.pos):
+                self.game_state = "GUIDE"
+                self.guide_scroll_y = 0 # Reset vị trí cuộn
             if self.exit_button_rect and self.exit_button_rect.collidepoint(event.pos):
                 self.running = False
 
+    # --- HÀM MỚI: Xử lý input cho màn hình hướng dẫn ---
+    def handle_guide_input(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.game_state = "MAIN_MENU"
+            if event.key == pygame.K_UP:
+                self.guide_scroll_y += SCROLL_SPEED
+            if event.key == pygame.K_DOWN:
+                self.guide_scroll_y -= SCROLL_SPEED
+                
+        # --- THÊM LOGIC CUỘN CHUỘT ---
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # Nút 1 là click chuột trái
+            if event.button == 1:
+                if self.back_button_rect and self.back_button_rect.collidepoint(event.pos):
+                    self.game_state = "MAIN_MENU"
+            # Nút 4 là cuộn lên
+            if event.button == 4:
+                self.guide_scroll_y += SCROLL_SPEED
+            # Nút 5 là cuộn xuống
+            if event.button == 5:
+                self.guide_scroll_y -= SCROLL_SPEED
+
+        # Giới hạn cuộn (áp dụng cho cả phím và chuột)
+        self.guide_scroll_y = min(0, self.guide_scroll_y) # Không cho cuộn lên quá đỉnh
+        self.guide_scroll_y = max(-self.guide_max_scroll, self.guide_scroll_y) # Không cho cuộn xuống quá đáy
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.back_button_rect and self.back_button_rect.collidepoint(event.pos):
+                self.game_state = "MAIN_MENU"
+        
+        # Giới hạn cuộn
+        self.guide_scroll_y = min(0, self.guide_scroll_y) # Không cho cuộn lên quá đỉnh
+        self.guide_scroll_y = max(-self.guide_max_scroll, self.guide_scroll_y) # Không cho cuộn xuống quá đáy
+
     def handle_character_selection(self, event):
-        if self.game_state != "CHARACTER_SELECT": return # Chỉ nhận input khi đang chọn
+        if self.game_state != "CHARACTER_SELECT": return
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT: self.p1_cursor_pos = 1
             if event.key == pygame.K_LEFT: self.p1_cursor_pos = 0
@@ -266,14 +303,12 @@ class Game:
             self.player.move(self.ai); self.ai.move(self.player)
             self.player.update(); self.ai.update()
             
-            # Player tấn công AI
             self.player.check_attack_collision(self.ai)
             if self.ai.last_damage_taken > 0:
                 damage_text = DamageText(self.ai.hurtbox.centerx, self.ai.hurtbox.top, self.ai.last_damage_taken, self.damage_font, YELLOW)
                 self.damage_text_group.add(damage_text)
                 self.ai.last_damage_taken = 0
             
-            # AI tấn công Player
             self.ai.check_attack_collision(self.player)
             if self.player.last_damage_taken > 0:
                 damage_text = DamageText(self.player.hurtbox.centerx, self.player.hurtbox.top, self.player.last_damage_taken, self.damage_font, RED)
@@ -289,7 +324,6 @@ class Game:
                 if self.game_state == "IN_GAME": self.current_round += 1; self.start_new_round()
 
         self.damage_text_group.update()
-
 
     def handle_round_end(self):
         round_winner = None
@@ -314,6 +348,9 @@ class Game:
         if not self.running: return
         if self.game_state == "MAIN_MENU":
             self.start_button_rect, self.guide_button_rect, self.exit_button_rect = draw_main_menu_screen(self.screen, self.bg_main_menu, self.logo_image)
+        # --- MỚI: Vẽ màn hình hướng dẫn ---
+        elif self.game_state == "GUIDE":
+            self.back_button_rect = draw_guide_screen(self.screen, self.bg_main_menu, self.guide_scroll_y)
         elif self.game_state in ["CHARACTER_SELECT", "CHARACTER_CONFIRMED"]:
             self.char_a_rect, self.char_b_rect = draw_character_select_screen(self.screen, self.bg_char_select, self.p1_cursor_pos,
                 self.char_stats, self.select_anims, self.select_frame_index, self.game_state, self.cursor_frames, self.cursor_frame_index, self.portraits)
@@ -324,7 +361,6 @@ class Game:
             if self.player: self.player.draw(self.screen)
             if self.ai: self.ai.draw(self.screen)
             
-            # Vẽ số sát thương
             self.damage_text_group.draw(self.screen)
             
             if self.player and self.ai:

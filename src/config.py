@@ -2,6 +2,8 @@
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FPS = 60
+GUIDE_CONTENT_HEIGHT = 1200 # Chiều cao của toàn bộ nội dung hướng dẫn (lớn hơn chiều cao màn hình)
+SCROLL_SPEED = 30           # Tốc độ cuộn (pixel mỗi lần cuộn)
 GAME_TITLE = "Kombat AI"
 
 # --- MÀU SẮC ---
