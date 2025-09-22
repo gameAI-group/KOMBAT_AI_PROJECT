@@ -201,3 +201,25 @@ def draw_game_over_screen(surface, winner_name):
     pygame.draw.rect(surface, RED, quit_rect, border_radius=10)
     draw_text(surface, "Thoát Game", 24, quit_rect.centerx, quit_rect.centery, color=BLACK)
     return replay_rect, quit_rect
+# --- MỚI: Class để quản lý hiệu ứng số sát thương ---
+class DamageText(pygame.sprite.Sprite):
+    def __init__(self, x, y, damage, font, color):
+        super().__init__()
+        self.image = font.render(str(damage), True, color)
+        self.rect = self.image.get_rect(center=(x, y))
+        self.creation_time = pygame.time.get_ticks()
+        self.duration = 800  # Tồn tại trong 0.8 giây
+        self.y_velocity = -2 # Di chuyển lên trên
+
+    def update(self):
+        # Di chuyển số lên trên
+        self.rect.y += self.y_velocity
+
+        # Mờ dần theo thời gian
+        elapsed_time = pygame.time.get_ticks() - self.creation_time
+        if elapsed_time > self.duration:
+            self.kill() # Tự hủy khi hết thời gian
+            return
+
+        alpha = 255 - (elapsed_time / self.duration) * 255
+        self.image.set_alpha(max(0, alpha))

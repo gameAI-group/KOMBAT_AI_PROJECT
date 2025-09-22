@@ -51,6 +51,8 @@ class Fighter:
         self.hitbox = None
         self.attack_hitbox_width = 100; self.attack_hitbox_height = 170
         self.attack_hitbox_offset_x = 10; self.attack_hitbox_offset_y = -170
+                # --- MỚI: Thêm biến để báo cáo sát thương ---
+        self.last_damage_taken = 0
 
     def reset(self):
         self.hp = self.max_hp; self.sp = self.max_sp
@@ -177,7 +179,12 @@ class Fighter:
             if total_hits == 1: self.attack_hit_this_frame = True
     
     def take_hit(self, damage, knockback, stun_duration, attacker_is_flipped):
-        if self.dead or self.invincible: return
+        if self.dead or self.invincible: return 
+        # Tính toán sát thương thực tế
+        final_damage = damage * (self.defense_modifier if self.defending else 1)
+        
+        # --- MỚI: Ghi lại số sát thương đã nhận ---
+        self.last_damage_taken = int(final_damage)
         self.attacking = False; self.rolling = False; self.combo_step = 0
         self.hp -= damage * (self.defense_modifier if self.defending else 1)
         if self.hp <= 0: self.hp = 0; self.dead = True; self.hit = False

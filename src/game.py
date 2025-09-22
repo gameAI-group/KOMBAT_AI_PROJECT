@@ -3,7 +3,7 @@ from .config import *
 from .fighter import Fighter
 from .ui import (draw_main_menu_screen, draw_character_select_screen,
                  draw_difficulty_select_screen, draw_battle_hud,
-                 draw_game_over_screen, draw_round_announcement)
+                 draw_game_over_screen, draw_round_announcement, DamageText)
 from .ai.ai_random import AIRandom
 from .ai.ai_rulebased import AIRuleBased
 
@@ -41,6 +41,11 @@ class Game:
         
         # Thêm biến timer cho việc xác nhận
         self.confirmation_timer = 0
+
+        # --- MỚI: Tạo group để quản lý số sát thương ---
+        self.damage_text_group = pygame.sprite.Group()
+        # Tạo font chữ cho số sát thương
+        self.damage_font = pygame.font.Font(FONT_PATH, 28)
 
         self.load_assets()
 
@@ -240,39 +245,51 @@ class Game:
         if self.game_state in ["CHARACTER_SELECT", "CHARACTER_CONFIRMED"]:
             now = pygame.time.get_ticks()
             anim_speed = 150 if self.game_state == "CHARACTER_CONFIRMED" else 100
-            if now - self.select_anim_timer > anim_speed:
-                self.select_frame_index += 1
-                self.select_anim_timer = now
-            if now - self.cursor_anim_timer > 80:
-                self.cursor_frame_index += 1
-                self.cursor_anim_timer = now
+            if now - self.select_anim_timer > anim_speed: self.select_frame_index += 1; self.select_anim_timer = now
+            if now - self.cursor_anim_timer > 80: self.cursor_frame_index += 1; self.cursor_anim_timer = now
         if self.game_state == "CHARACTER_CONFIRMED":
-            if pygame.time.get_ticks() - self.confirmation_timer > CONFIRMATION_DURATION:
-                self.game_state = "DIFFICULTY_SELECT"
+            if pygame.time.get_ticks() - self.confirmation_timer > CONFIRMATION_DURATION: self.game_state = "DIFFICULTY_SELECT"
+        
         if self.game_state == "ROUND_START":
             self.update_round_start_sequence()
-            if self.player: self.player.update()
-            if self.ai: self.ai.update()
+            if self.player: self.player.update(); self.ai.update()
             return
-        if self.game_state != "IN_GAME" or not self.player or not self.ai: return
+
+        if self.game_state != "IN_GAME" or not self.player or not self.ai: 
+            self.damage_text_group.update()
+            return
+            
         if not self.round_over:
             self.round_timer = ROUND_TIME_LIMIT - (pygame.time.get_ticks() - self.round_start_time)
             self.player.defend(pygame.key.get_pressed()[pygame.K_d])
             if self.ai_controller: self.ai_controller.update()
-            self.player.move(self.ai)
-            self.ai.move(self.player)
-            self.player.update()
-            self.ai.update()
+            self.player.move(self.ai); self.ai.move(self.player)
+            self.player.update(); self.ai.update()
+            
+            # Player tấn công AI
             self.player.check_attack_collision(self.ai)
+            if self.ai.last_damage_taken > 0:
+                damage_text = DamageText(self.ai.hurtbox.centerx, self.ai.hurtbox.top, self.ai.last_damage_taken, self.damage_font, YELLOW)
+                self.damage_text_group.add(damage_text)
+                self.ai.last_damage_taken = 0
+            
+            # AI tấn công Player
             self.ai.check_attack_collision(self.player)
+            if self.player.last_damage_taken > 0:
+                damage_text = DamageText(self.player.hurtbox.centerx, self.player.hurtbox.top, self.player.last_damage_taken, self.damage_font, RED)
+                self.damage_text_group.add(damage_text)
+                self.player.last_damage_taken = 0
+
             if self.player.dead or self.ai.dead or self.round_timer <= 0:
                 self.round_over = True; self.round_over_time = pygame.time.get_ticks()
                 self.handle_round_end()
         else:
             self.player.update(); self.ai.update()
             if pygame.time.get_ticks() - self.round_over_time > ROUND_OVER_DELAY:
-                if self.game_state == "IN_GAME":
-                    self.current_round += 1; self.start_new_round()
+                if self.game_state == "IN_GAME": self.current_round += 1; self.start_new_round()
+
+        self.damage_text_group.update()
+
 
     def handle_round_end(self):
         round_winner = None
@@ -298,32 +315,28 @@ class Game:
         if self.game_state == "MAIN_MENU":
             self.start_button_rect, self.guide_button_rect, self.exit_button_rect = draw_main_menu_screen(self.screen, self.bg_main_menu, self.logo_image)
         elif self.game_state in ["CHARACTER_SELECT", "CHARACTER_CONFIRMED"]:
-            self.char_a_rect, self.char_b_rect = draw_character_select_screen(
-                self.screen, self.bg_char_select, self.p1_cursor_pos,
-                self.char_stats, self.select_anims, self.select_frame_index,
-                self.game_state, self.cursor_frames, self.cursor_frame_index,
-                self.portraits
-            )
+            self.char_a_rect, self.char_b_rect = draw_character_select_screen(self.screen, self.bg_char_select, self.p1_cursor_pos,
+                self.char_stats, self.select_anims, self.select_frame_index, self.game_state, self.cursor_frames, self.cursor_frame_index, self.portraits)
         elif self.game_state == "DIFFICULTY_SELECT":
             self.easy_rect, self.medium_rect, self.hard_rect = draw_difficulty_select_screen(self.screen, self.bg_char_select, self.difficulty_cursor_pos)
         elif self.game_state in ["ROUND_START", "IN_GAME", "GAME_OVER"]:
             self.screen.blit(self.bg_stage_1, (0, 0))
             if self.player: self.player.draw(self.screen)
             if self.ai: self.ai.draw(self.screen)
+            
+            # Vẽ số sát thương
+            self.damage_text_group.draw(self.screen)
+            
             if self.player and self.ai:
                 timer_display = self.round_timer if not self.round_over else 0
                 draw_battle_hud(self.screen, self.player, self.ai, timer_display, self.player_rounds_won, self.ai_rounds_won)
-            if self.game_state == "ROUND_START":
-                draw_round_announcement(self.screen, self.round_announcement_text)
+            if self.game_state == "ROUND_START": draw_round_announcement(self.screen, self.round_announcement_text)
             elif self.game_state == "GAME_OVER":
                 self.replay_button_rect, self.quit_button_rect = draw_game_over_screen(self.screen, self.winner)
         pygame.display.flip()
 
     def run(self):
         while self.running:
-            self.handle_events()
-            self.update()
-            self.draw()
+            self.handle_events(); self.update(); self.draw()
             self.clock.tick(FPS)
-        pygame.quit()
-        sys.exit()
+        pygame.quit(); sys.exit()
