@@ -83,7 +83,10 @@ class Game:
             self.bg_stage_1 = pygame.transform.scale(temp_bg_stage, (SCREEN_WIDTH, SCREEN_HEIGHT))
             temp_logo = pygame.image.load(LOGO_IMAGE).convert_alpha()
             self.logo_image = pygame.transform.scale(temp_logo, (650, 500))
-
+            # --- THAY ĐỔI: Thêm lại phần tải portraits ---
+            self.portrait_a = pygame.image.load(PORTRAIT_A).convert_alpha()
+            self.portrait_b = pygame.image.load(PORTRAIT_B).convert_alpha()
+            self.portraits = {'A': self.portrait_a, 'B': self.portrait_b}
             # Tải animations cho màn hình chọn nhân vật
             self.select_anims['A'] = {
                 'idle': load_animation_frames(CHAR_A_STATS['animations']['idle']),
@@ -311,7 +314,8 @@ class Game:
             self.char_a_rect, self.char_b_rect = draw_character_select_screen(
                 self.screen, self.bg_char_select, self.p1_cursor_pos,
                 self.char_stats, self.select_anims, self.select_frame_index,
-                self.game_state, self.cursor_frames, self.cursor_frame_index
+                self.game_state, self.cursor_frames, self.cursor_frame_index,
+                self.portraits
             )
 
         elif self.game_state == "DIFFICULTY_SELECT":

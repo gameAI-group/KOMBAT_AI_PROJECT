@@ -48,14 +48,16 @@ SP_COST_ROLL = 25       # Chi phí SP cho mỗi lần roll thông thường
 
 # --- THÔNG SỐ NHÂN VẬT A ---
 CHAR_A_STATS = {
+    'lore': "Một kiếm sĩ lang thang với khả năng điều khiển ngọn lửa từ thanh quỷ kiếm. Anh ta chiến đấu để tìm lại danh dự đã mất.",
     'name': "Kiếm Sĩ Lửa", 'max_hp': 110, 'max_sp': 100, 'speed': 4, 'air_speed': 5,
     'defense_modifier': 0.4, 'sp_gain_on_block': 8,
     'attacks': {
-        'light1': {'damage': 5, 'duration': 330, 'cooldown': 20, 'stun': 200, 'animation': 'assets/images/character_a/05_1_atk/'},
-        'light2': {'damage': 7, 'duration': 475, 'cooldown': 20, 'stun': 250, 'animation': 'assets/images/character_a/06_2_atk/'},
-        'light3': {'damage': 9, 'knockback': 8, 'duration': 700, 'cooldown': 40, 'stun': 350, 'animation': 'assets/images/character_a/07_3_atk/'},
-        'air': {'damage': 8, 'duration': 400, 'cooldown': 30, 'stun': 300, 'animation': 'assets/images/character_a/air_atk/'},
+        'light1': {'display_name': "Chém Thường",'damage': 5, 'duration': 330, 'cooldown': 20, 'stun': 200, 'animation': 'assets/images/character_a/05_1_atk/'},
+        'light2': {'display_name': "Hất Kiếm",'damage': 7, 'duration': 475, 'cooldown': 20, 'stun': 250, 'animation': 'assets/images/character_a/06_2_atk/'},
+        'light3': {'display_name': "Xoáy Lửa",'damage': 9, 'knockback': 8, 'duration': 700, 'cooldown': 40, 'stun': 350, 'animation': 'assets/images/character_a/07_3_atk/'},
+        'air': {'display_name': "Không Kích",'damage': 8, 'duration': 400, 'cooldown': 30, 'stun': 300, 'animation': 'assets/images/character_a/air_atk/'},
         'special': {
+            'display_name': "Hỏa Long Ba",
             'damage': 25, 'knockback': 12, 'duration': 600, 'cooldown': 50, 'stun': 500,
             'animation': 'assets/images/character_a/08_sp_atk/',
             'hitbox_size': (200, 200),
@@ -75,14 +77,16 @@ CHAR_A_STATS = {
 
 # --- THÔNG SỐ NHÂN VẬT B ---
 CHAR_B_STATS = {
+    'lore': "Một sát thủ nhanh nhẹn thuộc một tổ chức bí ẩn. Hắn sử dụng song đao để kết liễu mục tiêu trong chớp mắt.",
     'name': "Sát Thủ Tốc Độ", 'max_hp': 90, 'max_sp': 100, 'speed': 4.6, 'air_speed': 6,
     'defense_modifier': 0.6, 'sp_gain_on_combo_finish': 10,
     'attacks': {
-        'light1': {'damage': 7, 'duration': 200, 'cooldown': 15, 'stun': 180, 'hit_on_frame': 3, 'animation': 'assets/images/character_b/1_atk/'},
-        'light2': {'damage': 9, 'duration': 450, 'cooldown': 15, 'stun': 300, 'hit_on_frame': 5, 'animation': 'assets/images/character_b/2_atk/'},
-        'light3': {'damage': 11, 'knockback': 10, 'duration': 780, 'cooldown': 35, 'stun': 400, 'hit_on_frame': 18, 'animation': 'assets/images/character_b/3_atk/'},
-        'air': {'damage': 12, 'duration': 350, 'cooldown': 25, 'stun': 350, 'hit_on_frame': 4, 'animation': 'assets/images/character_b/air_atk/'},
+        'light1': {'display_name': "Song Đao Trảm",'damage': 7, 'duration': 200, 'cooldown': 15, 'stun': 180, 'hit_on_frame': 3, 'animation': 'assets/images/character_b/1_atk/'},
+        'light2': {'display_name': "Xoay Người Chém",'damage': 9, 'duration': 450, 'cooldown': 15, 'stun': 300, 'hit_on_frame': 5, 'animation': 'assets/images/character_b/2_atk/'},
+        'light3': {'display_name': "Liên Hoàn Cước",'damage': 11, 'knockback': 10, 'duration': 780, 'cooldown': 35, 'stun': 400, 'hit_on_frame': 18, 'animation': 'assets/images/character_b/3_atk/'},
+        'air': {'display_name': "Phi Dao",'damage': 12, 'duration': 350, 'cooldown': 25, 'stun': 350, 'hit_on_frame': 4, 'animation': 'assets/images/character_b/air_atk/'},
         'special': {
+            'display_name': "Bão Kiếm Vô Ảnh",
             'damage': 10, 'hits': 3, 'hit_frames': [11, 17, 20],
             'knockback_on_last_hit': 15, 'duration': 800, 'cooldown': 60,
             'stun': 150, 'animation': 'assets/images/character_b/sp_atk/',
