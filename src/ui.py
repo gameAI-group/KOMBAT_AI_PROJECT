@@ -64,37 +64,49 @@ def draw_character_info_panel(surface, char_key, char_stats, position, is_select
         draw_text(surface, f"- {attack.capitalize()}", 18, x + 30, y + 125 + i * 20, align="topleft", color=GRAY)
 
 def draw_character_select_screen(surface, bg, p1_cursor_pos, char_stats, select_anims, frame_index, game_state, cursor_frames, cursor_index):
-    """Vẽ màn hình chọn nhân vật sống động (phiên bản an toàn)."""
+    """Vẽ màn hình chọn nhân vật sống động với nhân vật được phóng to và căn chỉnh vị trí."""
     surface.blit(bg, (0, 0))
-    
+
     p1_char_key = 'A' if p1_cursor_pos == 0 else 'B'
     other_char_key = 'B' if p1_cursor_pos == 0 else 'A'
 
-    # --- SỬA LỖI: Kiểm tra an toàn trước khi truy cập dictionary ---
+    # Lấy animation an toàn
     p1_anim_list = []
     other_anim_list = []
-
-    # Lấy animation một cách an toàn
     if p1_char_key in select_anims:
         anim_type = 'confirm' if game_state == "CHARACTER_CONFIRMED" else 'idle'
         p1_anim_list = select_anims[p1_char_key].get(anim_type, [])
-    
     if other_char_key in select_anims:
         other_anim_list = select_anims[other_char_key].get('idle', [])
-    # -----------------------------------------------------------
-    
-    # Lấy frame hiện tại của animation, có kiểm tra để tránh lỗi nếu danh sách rỗng
+
     p1_frame = p1_anim_list[frame_index % len(p1_anim_list)] if p1_anim_list else pygame.Surface((1, 1), pygame.SRCALPHA)
     other_frame = other_anim_list[frame_index % len(other_anim_list)] if other_anim_list else pygame.Surface((1, 1), pygame.SRCALPHA)
 
+    # === THAY ĐỔI 1: ĐIỀU CHỈNH ĐỘ LỚN ===
+    # Phóng to nhân vật lên 2.2 lần kích thước gốc. Bạn có thể đổi số này.
+    scale_factor = 3
+    # =====================================
+
+    original_width = p1_frame.get_width()
+    original_height = p1_frame.get_height()
+    new_size = (int(original_width * scale_factor), int(original_height * scale_factor))
+
+    scaled_p1_frame = pygame.transform.scale(p1_frame, new_size)
+    scaled_other_frame = pygame.transform.scale(other_frame, new_size)
+
+    # === THAY ĐỔI 2: ĐIỀU CHỈNH VỊ TRÍ ĐỨNG ===
+    # Tăng giá trị Y của tâm ảnh (ví dụ: 350) để hạ nhân vật xuống thấp hơn.
+    character_y_position = 200
+    # ==========================================
+
     # Vẽ nhân vật bên trái (P1)
-    p1_image = pygame.transform.flip(p1_frame, False, False)
-    p1_rect = p1_image.get_rect(center=(SCREEN_WIDTH * 0.25, 250))
+    p1_image = pygame.transform.flip(scaled_p1_frame, False, False)
+    p1_rect = p1_image.get_rect(center=(SCREEN_WIDTH * 0.25, character_y_position))
     surface.blit(p1_image, p1_rect)
 
     # Vẽ nhân vật bên phải (AI)
-    other_image = pygame.transform.flip(other_frame, True, False)
-    other_rect = other_image.get_rect(center=(SCREEN_WIDTH * 0.75, 250))
+    other_image = pygame.transform.flip(scaled_other_frame, True, False)
+    other_rect = other_image.get_rect(center=(SCREEN_WIDTH * 0.75, character_y_position))
     surface.blit(other_image, other_rect)
 
     # Vẽ 2 khung thông tin ở dưới
@@ -104,7 +116,7 @@ def draw_character_select_screen(surface, bg, p1_cursor_pos, char_stats, select_
     # Vẽ cursor động
     if game_state != "CHARACTER_CONFIRMED" and cursor_frames:
         current_cursor_frame = cursor_frames[cursor_index % len(cursor_frames)]
-        cursor_y = 100
+        cursor_y = 120
         cursor_x = p1_rect.centerx if p1_cursor_pos == 0 else other_rect.centerx
         cursor_rect = current_cursor_frame.get_rect(center=(cursor_x, cursor_y))
         surface.blit(current_cursor_frame, cursor_rect)
@@ -113,7 +125,7 @@ def draw_character_select_screen(surface, bg, p1_cursor_pos, char_stats, select_
     draw_text(surface, "CHỌN CHIẾN BINH", 40, SCREEN_WIDTH // 2, 50)
     if game_state != "CHARACTER_CONFIRMED":
         draw_text(surface, "Nhấn ENTER để xác nhận", 24, SCREEN_WIDTH // 2, 580)
-        
+
     return None, None
 
 def draw_difficulty_select_screen(surface, bg, cursor_pos):
