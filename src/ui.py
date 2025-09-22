@@ -46,7 +46,7 @@ def draw_detailed_character_info(surface, stats, position):
     panel_bg.fill((10, 20, 30, 220))
     surface.blit(panel_bg, (panel_x, panel_y))
     pygame.draw.rect(surface, GRAY, (panel_x, panel_y, panel_w, panel_h), 2)
-    draw_text_custom_font(surface, FONT_TITLE_PATH, stats.get('name', '???'), 40, panel_x + panel_w / 2, panel_y + 35, color=YELLOW)
+    draw_text_custom_font(surface, FONT_PATH, stats.get('name', '???'), 40, panel_x + panel_w / 2, panel_y + 35, color=YELLOW)
     lore_text = stats.get('lore', 'Không có thông tin.')
     words = lore_text.split(' ')
     line = ""
@@ -148,16 +148,33 @@ def draw_round_announcement(surface, text):
     overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     overlay.fill((0, 0, 0, 120)); surface.blit(overlay, (0, 0))
     draw_text_custom_font(surface, FONT_TITLE_PATH, text, 100, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, YELLOW)
+# --- HÀM draw_health_bar ĐÃ THAY ĐỔI ---
 def draw_health_bar(surface, x, y, width, height, hp, max_hp):
     ratio = max(0, hp / max_hp)
-    pygame.draw.rect(surface, (80,0,0), (x, y, width, height))
-    pygame.draw.rect(surface, GREEN, (x, y, width * ratio, height))
+    
+    # Vẽ nền và viền
+    pygame.draw.rect(surface, (80,0,0), (x, y, width, height)) # Nền đỏ sẫm
+    
+    # THAY ĐỔI 1: Màu thanh máu là MÀU ĐỎ (RED)
+    pygame.draw.rect(surface, RED, (x, y, width * ratio, height))
     pygame.draw.rect(surface, WHITE, (x, y, width, height), 2)
+
+    # THAY ĐỔI 2: Vẽ số máu
+    hp_text = f"{int(hp)} / {int(max_hp)}"
+    draw_text(surface, hp_text, 16, x + width / 2, y + height / 2, color=WHITE)
+
+# --- HÀM draw_sp_bar ĐÃ THAY ĐỔI ---
 def draw_sp_bar(surface, x, y, width, height, sp, max_sp):
     ratio = max(0, sp / max_sp)
+    
+    # Vẽ nền và viền
     pygame.draw.rect(surface, (50, 50, 50), (x, y, width, height))
     pygame.draw.rect(surface, BLUE, (x, y, width * ratio, height))
     pygame.draw.rect(surface, WHITE, (x, y, width, height), 2)
+    
+    # THAY ĐỔI: Vẽ số năng lượng
+    sp_text = f"{int(sp)} / {int(max_sp)}"
+    draw_text(surface, sp_text, 14, x + width / 2, y + height / 2, color=WHITE)
 def draw_battle_hud(surface, player, ai, round_timer, player_wins, ai_wins):
     seconds = max(0, round_timer // 1000)
     draw_text(surface, str(seconds), 60, SCREEN_WIDTH // 2, 30)

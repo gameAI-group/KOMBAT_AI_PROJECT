@@ -134,3 +134,4 @@ SFX_CONFIRM = 'assets/audio/sfx/select_confirm.wav'
 ROUND_ANNOUNCE_DURATION = 2000 # Thời gian hiển thị "Round X" (2 giây)
 COUNTDOWN_STEP_DURATION = 1000 # Thời gian mỗi bước đếm ngược "3, 2, 1" (1 giây)
 FIGHT_ANNOUNCE_DURATION = 1000 # Thời gian hiển thị "FIGHT!" (1 giây)
+CONFIRMATION_DURATION = 1500 

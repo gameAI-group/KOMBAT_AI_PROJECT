@@ -201,12 +201,20 @@ class Game:
             if event.key == pygame.K_LEFT: self.p1_cursor_pos = 0
             if event.key == pygame.K_RETURN: self.confirm_character_choice(self.p1_cursor_pos)
 
+     # --- THAY ĐỔI: Hàm này giờ đây sẽ bắt đầu trạng thái chờ ---
     def confirm_character_choice(self, choice_index):
         self.sfx['confirm'].play()
         self.player_choice = 'A' if choice_index == 0 else 'B'
         self.ai_choice = 'B' if self.player_choice == 'A' else 'A'
-        self.game_state = "DIFFICULTY_SELECT"
 
+        # Chuyển sang trạng thái chờ xác nhận
+        self.game_state = "CHARACTER_CONFIRMED"
+        # Reset animation frame để animation xác nhận bắt đầu từ đầu
+        self.select_frame_index = 0
+        # Bắt đầu đếm giờ
+        self.confirmation_timer = pygame.time.get_ticks()
+
+    # ... (các hàm xử lý input khác giữ nguyên)
     def handle_difficulty_selection(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN and self.difficulty_cursor_pos < 2: self.difficulty_cursor_pos += 1
@@ -216,13 +224,11 @@ class Game:
             if self.easy_rect and self.easy_rect.collidepoint(event.pos): self.confirm_difficulty_choice(0)
             if self.medium_rect and self.medium_rect.collidepoint(event.pos): self.confirm_difficulty_choice(1)
             if self.hard_rect and self.hard_rect.collidepoint(event.pos): self.confirm_difficulty_choice(2)
-
     def confirm_difficulty_choice(self, choice_index):
         self.sfx['confirm'].play()
         choices = ["EASY", "MEDIUM", "HARD"]
         self.difficulty_choice = choices[choice_index]
         self.reset_game()
-
     def handle_in_game_input(self, event):
         if not self.player or self.player.dead: return
         if event.type == pygame.KEYDOWN:
@@ -230,7 +236,6 @@ class Game:
             if event.key == pygame.K_f: self.player.attack(self.ai, 'special')
             if event.key == pygame.K_UP: self.player.jump()
             if event.key == pygame.K_SPACE: self.player.roll()
-
     def handle_game_over_input(self, event):
         def back_to_menu():
             self.game_state = "CHARACTER_SELECT"
@@ -239,7 +244,6 @@ class Game:
                 pygame.mixer.music.play(-1)
             except pygame.error as e:
                 print(f"Cảnh báo: Không tải được nhạc chọn nhân vật: {e}")
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN: back_to_menu()
             if event.key == pygame.K_ESCAPE: self.running = False
@@ -248,23 +252,31 @@ class Game:
             if self.quit_button_rect and self.quit_button_rect.collidepoint(event.pos): self.running = False
 
     def update(self):
-        # Cập nhật animation cho màn hình chọn nhân vật
-        if self.game_state == "CHARACTER_SELECT":
+        # --- THAY ĐỔI: Animation chạy trong cả 2 trạng thái ---
+        if self.game_state in ["CHARACTER_SELECT", "CHARACTER_CONFIRMED"]:
             now = pygame.time.get_ticks()
-            if now - self.select_anim_timer > 100:
+            # Tốc độ animation có thể khác nhau giữa idle và confirm
+            anim_speed = 150 if self.game_state == "CHARACTER_CONFIRMED" else 100
+            if now - self.select_anim_timer > anim_speed:
                 self.select_frame_index += 1
                 self.select_anim_timer = now
             if now - self.cursor_anim_timer > 80:
                 self.cursor_frame_index += 1
                 self.cursor_anim_timer = now
 
+        # --- MỚI: Xử lý trạng thái sau khi xác nhận nhân vật ---
+        if self.game_state == "CHARACTER_CONFIRMED":
+            # Kiểm tra xem đã đủ thời gian chờ chưa
+            if pygame.time.get_ticks() - self.confirmation_timer > CONFIRMATION_DURATION:
+                self.game_state = "DIFFICULTY_SELECT"
+
         if self.game_state == "ROUND_START":
             self.update_round_start_sequence()
             if self.player: self.player.update()
             if self.ai: self.ai.update()
             return
+        # ... (phần còn lại của hàm update giữ nguyên)
         if self.game_state != "IN_GAME" or not self.player or not self.ai: return
-
         if not self.round_over:
             self.round_timer = ROUND_TIME_LIMIT - (pygame.time.get_ticks() - self.round_start_time)
             keys = pygame.key.get_pressed()
@@ -273,7 +285,6 @@ class Game:
             self.player.move(self.ai); self.ai.move(self.player)
             self.player.update(); self.ai.update()
             self.player.check_attack_collision(self.ai); self.ai.check_attack_collision(self.player)
-
             if self.player.dead or self.ai.dead or self.round_timer <= 0:
                 self.round_over = True; self.round_over_time = pygame.time.get_ticks()
                 self.handle_round_end()
