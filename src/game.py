@@ -176,6 +176,7 @@ class Game:
 
     def handle_main_menu_input(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            self.sfx['confirm'].play() # <--- THÊM ÂM THANHv
             if self.start_button_rect and self.start_button_rect.collidepoint(event.pos):
                 self.game_state = "CHARACTER_SELECT"
                 try:
@@ -185,9 +186,11 @@ class Game:
                     print(f"Cảnh báo: Không tải được nhạc chọn nhân vật: {e}")
             # --- THAY ĐỔI: Chuyển sang màn hình hướng dẫn ---
             if self.guide_button_rect and self.guide_button_rect.collidepoint(event.pos):
+                self.sfx['confirm'].play() # <--- THÊM ÂM THANH
                 self.game_state = "GUIDE"
                 self.guide_scroll_y = 0 # Reset vị trí cuộn
             if self.exit_button_rect and self.exit_button_rect.collidepoint(event.pos):
+                self.sfx['confirm'].play() # <--- THÊM ÂM THANH
                 self.running = False
 
     # --- HÀM MỚI: Xử lý input cho màn hình hướng dẫn ---

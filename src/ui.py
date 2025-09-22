@@ -22,7 +22,7 @@ def draw_text(surface, text, size, x, y, color=WHITE, align="center"):
 def draw_main_menu_screen(surface, bg, logo_image):
     surface.blit(bg, (0, 0))
     if logo_image:
-        logo_rect = logo_image.get_rect(center=(SCREEN_WIDTH // 2, 180))
+        logo_rect = logo_image.get_rect(center=(SCREEN_WIDTH // 2, 160))
         surface.blit(logo_image, logo_rect)
     else:
         draw_text_custom_font(surface, FONT_TITLE_PATH, "KOMBAT AI", 90, SCREEN_WIDTH // 2, 180, YELLOW)
