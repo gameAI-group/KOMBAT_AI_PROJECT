@@ -124,6 +124,8 @@ LOGO_IMAGE = 'assets/images/ui/logo.png'
 MUSIC_MENU = 'assets/audio/music/menu_music.mp3'
 MUSIC_BATTLE = 'assets/audio/music/battle_music.mp3'
 MUSIC_CHAR_SELECT = 'assets/audio/music/char_select_music.mp3'
+MUSIC_WIN = 'assets/audio/music/victory_music.mp3'  # Nhạc khi người chơi thắng
+MUSIC_LOSE = 'assets/audio/music/defeat_music.mp3' # Nhạc khi người chơi thua (hoặc hòa)
 
 SFX_ROUND_1 = 'assets/audio/sfx/round1.wav'
 SFX_ROUND_2 = 'assets/audio/sfx/round2.wav'

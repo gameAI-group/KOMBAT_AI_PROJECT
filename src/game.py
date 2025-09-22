@@ -66,6 +66,7 @@ class Game:
         self.round_start_time = 0; self.round_timer = ROUND_TIME_LIMIT
         self.round_over = False; self.round_over_time = 0
         self.winner = None
+        self.final_winner = None 
         self.round_start_sequence_timer = 0
         self.round_announcement_text = ""; self.round_announcement_step = 0
         
@@ -342,6 +343,21 @@ class Game:
         def set_game_over(winner_name):
             self.winner = winner_name
             self.game_state = "GAME_OVER"
+                        # --- LOGIC PHÁT NHẠC KẾT THÚC TRẬN ĐẤU ---
+            pygame.mixer.music.fadeout(1000) # Làm mờ dần nhạc chiến đấu
+
+            try:
+                # Nếu người chơi thắng
+                if winner_name == self.player.name:
+                    pygame.mixer.music.load(MUSIC_WIN)
+                # Nếu người chơi thua hoặc hòa
+                else:
+                    pygame.mixer.music.load(MUSIC_LOSE)
+                
+                pygame.mixer.music.play(-1) # Phát lặp lại nhạc thắng/thua
+            except pygame.error as e:
+                print(f"Cảnh báo: Không tải được nhạc kết thúc trận đấu: {e}")
+            # ------------------------------------------
         if self.player_rounds_won >= ROUNDS_TO_WIN: set_game_over(self.player.name)
         elif self.ai_rounds_won >= ROUNDS_TO_WIN: set_game_over(self.ai.name)
         elif self.winner == "DRAW" and self.current_round >= (ROUNDS_TO_WIN * 2 -1):
