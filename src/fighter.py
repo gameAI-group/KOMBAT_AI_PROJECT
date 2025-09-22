@@ -53,6 +53,7 @@ class Fighter:
         self.attack_hitbox_offset_x = 10; self.attack_hitbox_offset_y = -170
                 # --- MỚI: Thêm biến để báo cáo sát thương ---
         self.last_damage_taken = 0
+
     def reset(self):
         self.hp = self.max_hp; self.sp = self.max_sp
         self.anchor_x, self.anchor_y = self.start_x, self.start_y
@@ -71,6 +72,7 @@ class Fighter:
         self.hit_stun_duration = 0; self.ai_move_direction = 0
         self.invincible = False; self.last_special_time = -SPECIAL_ATTACK_COOLDOWN
         self.tech_rolling = False
+
     def load_animations(self):
         animation_dict = {}; all_anim_paths = self.stats['animations'].copy()
         for attack_name, attack_data in self.attacks.items():
