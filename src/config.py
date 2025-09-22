@@ -129,6 +129,10 @@ SFX_FINAL_ROUND = 'assets/audio/sfx/final_round.wav'
 SFX_COUNTDOWN = 'assets/audio/sfx/countdown.wav'
 SFX_FIGHT = 'assets/audio/sfx/fight.wav'
 SFX_CONFIRM = 'assets/audio/sfx/select_confirm.wav'
+SFX_JUMP = 'assets/audio/sfx/jump.wav'
+SFX_HIT_A = 'assets/audio/sfx/hit4A.wav'      # Âm thanh đánh của Kiếm Sĩ
+SFX_HIT_B = 'assets/audio/sfx/hit4B.wav'      # Âm thanh đánh của Sát Thủ
+SFX_AIR_HIT = 'assets/audio/sfx/airhit.wav'   # Âm thanh khi đòn đánh trên không trúng
 
 # --- CÀI ĐẶT CHO ĐẾM NGƯỢC ---
 ROUND_ANNOUNCE_DURATION = 2000 # Thời gian hiển thị "Round X" (2 giây)
