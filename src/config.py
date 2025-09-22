@@ -1,22 +1,32 @@
 # --- CÀI ĐẶT CƠ BẢN CỦA GAME ---
-SCREEN_WIDTH = 800; SCREEN_HEIGHT = 600; FPS = 60; GAME_TITLE = "Kombat AI"
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+FPS = 60
+GAME_TITLE = "Kombat AI"
 
 # --- MÀU SẮC ---
-BLACK = (0,0,0); WHITE = (255,255,255); RED = (255,0,0); GREEN = (0,255,0); BLUE = (0,0,255);YELLOW = (255, 255, 0);GRAY = (100, 100, 100)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+GRAY = (100, 100, 100)
 PURPLE = (128, 0, 128)
-
 
 # --- THÔNG SỐ TRẬN ĐẤU ---
 ROUNDS_TO_WIN = 2
-ROUND_TIME_LIMIT = 60000 # 60 giây
-ROUND_OVER_DELAY = 3000 # 3 giây nghỉ giữa các hiệp
+ROUND_TIME_LIMIT = 60000  # 60 giây
+ROUND_OVER_DELAY = 3000   # 3 giây nghỉ giữa các hiệp
 
 # --- VẬT LÝ VÀ COMBAT ---
-GRAVITY = 1; JUMP_POWER = -18; GROUND_Y = 550
-DEFAULT_HIT_STUN = 200 # 0.2s
-ROLL_DURATION =  350 # Tổng thời gian của hành động lướt (0.35s)
+GRAVITY = 1
+JUMP_POWER = -18
+GROUND_Y = 550
+DEFAULT_HIT_STUN = 200  # 0.2s
+ROLL_DURATION = 350     # Tổng thời gian của hành động lướt (0.35s)
 ROLL_COOLDOWN_DURATION = 180 # Thời gian hồi chiêu
-ROLL_SPEED = 8 # Tốc độ của cú lướt
+ROLL_SPEED = 8          # Tốc độ của cú lướt
 COMBO_TIMEOUT = 400
 
 # --- CÀI ĐẶT I-FRAME CHO ROLL ---
@@ -24,18 +34,19 @@ ROLL_IFRAME_START = 50      # Bất tử bắt đầu sau 50ms (khung hình kh�
 ROLL_IFRAME_DURATION = 200  # Bất tử kéo dài trong 200ms
 
 # --- CÀI ĐẶT HỒI CHIÊU ĐẶC BIỆT ---
-SPECIAL_ATTACK_COOLDOWN = 5000 # 10 giây (tính bằng mili-giây)
+SPECIAL_ATTACK_COOLDOWN = 5000 # 5 giây (tính bằng mili-giây)
 
-# --- MỚI: CÀI ĐẶT CHO "TECH ROLL" (LƯỚT KHI BỊ ĐÁNH) ---
-TECH_ROLL_WINDOW = 150 # Cửa sổ 150ms sau khi trúng đòn để có thể lướt
-SP_COST_TECH_ROLL = 35 # Chi phí SP cao hơn cho hành động này
+# --- CÀI ĐẶT CHO "TECH ROLL" (LƯỚT KHI BỊ ĐÁNH) ---
+TECH_ROLL_WINDOW = 150  # Cửa sổ 150ms sau khi trúng đòn để có thể lướt
+SP_COST_TECH_ROLL = 35  # Chi phí SP cao hơn cho hành động này
 
 # --- CÀI ĐẶT SP ---
-PASSIVE_SP_GAIN_RATE = 3000; PASSIVE_SP_GAIN_AMOUNT = 1
+PASSIVE_SP_GAIN_RATE = 3000
+PASSIVE_SP_GAIN_AMOUNT = 1
 SP_COST_SPECIAL = 45
-SP_COST_ROLL = 25 # Chi phí SP cho mỗi lần roll thông thường
+SP_COST_ROLL = 25       # Chi phí SP cho mỗi lần roll thông thường
 
-# ... (Phần còn lại của file giữ nguyên) ...
+# --- THÔNG SỐ NHÂN VẬT A ---
 CHAR_A_STATS = {
     'name': "Kiếm Sĩ Lửa", 'max_hp': 110, 'max_sp': 100, 'speed': 4, 'air_speed': 5,
     'defense_modifier': 0.4, 'sp_gain_on_block': 8,
@@ -61,6 +72,8 @@ CHAR_A_STATS = {
     'animation_speeds': { 'light1': 30, 'light2': 25, 'light3': 30, 'take_hit': 50, 'death': 150, 'defend': 60,'roll': 90  },
     'hold_frames': { 'defend': 8 }
 }
+
+# --- THÔNG SỐ NHÂN VẬT B ---
 CHAR_B_STATS = {
     'name': "Sát Thủ Tốc Độ", 'max_hp': 90, 'max_sp': 100, 'speed': 4.6, 'air_speed': 6,
     'defense_modifier': 0.6, 'sp_gain_on_combo_finish': 10,
@@ -88,9 +101,10 @@ CHAR_B_STATS = {
     'animation_speeds': { 'light1': 25, 'light2': 25, 'light3': 30, 'special': 25, 'air': 40, 'death': 100, 'defend': 60,'roll': 80  },
     'hold_frames': { 'defend': 5 }
 }
+
 # --- ĐƯỜNG DẪN TÀI NGUYÊN ---
 FONT_PATH = 'assets/fonts/main_font.ttf'
-FONT_TITLE_PATH = 'assets/fonts/BoldPixels.ttf' # Font cho tiêu đề game
+FONT_TITLE_PATH = 'assets/fonts/BoldPixels.ttf'
 
 BG_MAIN_MENU = 'assets/images/backgrounds/main_menu_bg.png'
 BG_CHAR_SELECT = 'assets/images/backgrounds/char_select_bg.png'
@@ -99,17 +113,20 @@ BG_STAGE_1 = 'assets/images/backgrounds/stage_01.png'
 PORTRAIT_A = 'assets/images/character_a/portrait.png'
 PORTRAIT_B = 'assets/images/character_b/portrait.png'
 CURSOR_P1 = 'assets/images/ui/p1_cursor.png'
+LOGO_IMAGE = 'assets/images/ui/logo.png'
 
 MUSIC_MENU = 'assets/audio/music/menu_music.mp3'
 MUSIC_BATTLE = 'assets/audio/music/battle_music.mp3'
-# --- MỚI: ĐƯỜNG DẪN HIỆU ỨNG ÂM THANH ---
+MUSIC_CHAR_SELECT = 'assets/audio/music/char_select_music.mp3'
+
 SFX_ROUND_1 = 'assets/audio/sfx/round1.wav'
 SFX_ROUND_2 = 'assets/audio/sfx/round2.wav'
 SFX_FINAL_ROUND = 'assets/audio/sfx/final_round.wav'
 SFX_COUNTDOWN = 'assets/audio/sfx/countdown.wav'
 SFX_FIGHT = 'assets/audio/sfx/fight.wav'
+SFX_CONFIRM = 'assets/audio/sfx/select_confirm.wav'
 
-# --- MỚI: CÀI ĐẶT CHO ĐẾM NGƯỢC ---
+# --- CÀI ĐẶT CHO ĐẾM NGƯỢC ---
 ROUND_ANNOUNCE_DURATION = 2000 # Thời gian hiển thị "Round X" (2 giây)
 COUNTDOWN_STEP_DURATION = 1000 # Thời gian mỗi bước đếm ngược "3, 2, 1" (1 giây)
 FIGHT_ANNOUNCE_DURATION = 1000 # Thời gian hiển thị "FIGHT!" (1 giây)
