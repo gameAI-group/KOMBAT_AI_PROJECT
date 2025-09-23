@@ -58,7 +58,7 @@ CHAR_A_STATS = {
         # --- CẬP NHẬT: Thêm 'hit_on_frame' để kiểm soát khi nào hitbox active ---
         'light1': {'display_name': "Chém Thường",'damage': 6, 'duration': 330, 'cooldown': 28, 'stun': 220, 'hit_on_frame': 2, 'animation': 'assets/images/character_a/05_1_atk/'},
         'light2': {'display_name': "Liên Hoàn Trả",'damage': 7, 'duration': 475, 'cooldown': 32, 'stun': 280, 'hit_on_frame': 4, 'animation': 'assets/images/character_a/06_2_atk/'},
-        'light3': {'display_name': "Trảm Hỏa",'damage': 9, 'knockback': 8, 'duration': 700, 'cooldown': 50, 'stun': 400, 'hit_on_frame': 8, 'animation': 'assets/images/character_a/07_3_atk/'},
+        'light3': {'display_name': "Trảm Hỏa",'damage': 9, 'knockback': 10, 'duration': 700, 'cooldown': 50, 'stun': 400, 'hit_on_frame': 8, 'animation': 'assets/images/character_a/07_3_atk/'},
         'air': {'display_name': "Trảm Không",'damage': 10, 'duration': 400, 'cooldown': 30, 'stun': 300, 'hit_on_frame': 5, 'animation': 'assets/images/character_a/air_atk/'},
         'special': {
             'display_name': "Hỏa Long Ba",
@@ -88,7 +88,7 @@ CHAR_B_STATS = {
     'attacks': {
         'light1': {'display_name': "Chém Thường",'damage': 7, 'duration': 200, 'cooldown': 12, 'stun': 160, 'hit_on_frame': 2, 'animation': 'assets/images/character_b/1_atk/'},
         'light2': {'display_name': "Song Đao Liên Ảnh",'damage': 8, 'duration': 350, 'cooldown': 15, 'stun': 260, 'hit_on_frame': 5, 'animation': 'assets/images/character_b/2_atk/'}, # Duration giảm ~6 frame
-        'light3': {'display_name': "Liên Vũ Phong Đao",'damage': 10, 'knockback': 10, 'duration': 647, 'cooldown': 35, 'stun': 320, 'hit_on_frame': 14, 'animation': 'assets/images/character_b/3_atk/'}, # Duration giảm ~8 frame
+        'light3': {'display_name': "Liên Vũ Phong Đao",'damage': 10, 'knockback': 12, 'duration': 647, 'cooldown': 35, 'stun': 320, 'hit_on_frame': 14, 'animation': 'assets/images/character_b/3_atk/'}, # Duration giảm ~8 frame
         'air': {'display_name': "Đoạn Không Trảm",'damage': 12, 'duration': 350, 'cooldown': 25, 'stun': 350, 'hit_on_frame': 4, 'animation': 'assets/images/character_b/air_atk/'},
         'special': {
             'display_name': "Vô Ảnh Sát",
