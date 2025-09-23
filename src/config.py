@@ -76,7 +76,7 @@ CHAR_A_STATS = {
         'take_hit': 'assets/images/character_a/10_take_hit/', 'death': 'assets/images/character_a/11_death/'
     },
     # --- CẬP NHẬT: Tăng giá trị để làm chậm animation ---
-     'animation_speeds': { 'light1': 25, 'light2': 35, 'light3': 30, 'special': 25, 'air': 40, 'death': 100, 'defend': 60,'roll': 80 },
+     'animation_speeds': { 'light1': 25, 'light2': 35, 'light3': 30, 'special': 25, 'air': 40, 'death': 600, 'defend': 60,'roll': 80 },
     'hold_frames': { 'defend': 8 }
 }
 
@@ -107,7 +107,7 @@ CHAR_B_STATS = {
         'defend': 'assets/images/character_b/defend/', 'roll': 'assets/images/character_b/roll/',
         'take_hit': 'assets/images/character_b/take_hit/', 'death': 'assets/images/character_b/death/'
     },
-    'animation_speeds': { 'light1': 25, 'light2': 25, 'light3': 30, 'special': 25, 'air': 40, 'death': 100, 'defend': 60,'roll': 80  },
+    'animation_speeds': { 'light1': 25, 'light2': 25, 'light3': 30, 'special': 25, 'air': 40, 'death': 250, 'defend': 60,'roll': 80  },
     'hold_frames': { 'defend': 5 }
 }
 
@@ -140,6 +140,7 @@ SFX_JUMP = 'assets/audio/sfx/jump.wav'
 SFX_HIT_A = 'assets/audio/sfx/hit4A.wav'      # Âm thanh đánh của Kiếm Sĩ
 SFX_HIT_B = 'assets/audio/sfx/hit4B.wav'      # Âm thanh đánh của Sát Thủ
 SFX_AIR_HIT = 'assets/audio/sfx/airhit.wav'   # Âm thanh khi đòn đánh trên không trúng
+
 
 # --- CÀI ĐẶT CHO ĐẾM NGƯỢC ---
 ROUND_ANNOUNCE_DURATION = 2000 # Thời gian hiển thị "Round X" (2 giây)
