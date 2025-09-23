@@ -48,19 +48,21 @@ PASSIVE_SP_GAIN_AMOUNT = 1
 SP_COST_SPECIAL = 45
 SP_COST_ROLL = 25       # Chi phí SP cho mỗi lần roll thông thường
 
-# --- THÔNG SỐ NHÂN VẬT A ---
+# --- THÔNG SỐ NHÂN VẬT A (ĐÃ CẬP NHẬT) ---
+# --- THÔNG SỐ NHÂN VẬT A (ĐÃ CẬP NHẬT) ---
 CHAR_A_STATS = {
     'lore': "Một kiếm sĩ lang thang với khả năng điều khiển ngọn lửa từ thanh quỷ kiếm. Anh ta chiến đấu để tìm lại danh dự đã mất.",
-    'name': "Kiếm Sĩ Lửa", 'max_hp': 110, 'max_sp': 100, 'speed': 4, 'air_speed': 5,
+    'name': "Kiếm Sĩ Lửa", 'max_hp': 120, 'max_sp': 100, 'speed': 4, 'air_speed': 5,
     'defense_modifier': 0.4, 'sp_gain_on_block': 8,
     'attacks': {
-        'light1': {'display_name': "Chém Thường",'damage': 5, 'duration': 330, 'cooldown': 20, 'stun': 200, 'animation': 'assets/images/character_a/05_1_atk/'},
-        'light2': {'display_name': "Hất Kiếm",'damage': 7, 'duration': 475, 'cooldown': 20, 'stun': 250, 'animation': 'assets/images/character_a/06_2_atk/'},
-        'light3': {'display_name': "Xoáy Lửa",'damage': 9, 'knockback': 8, 'duration': 700, 'cooldown': 40, 'stun': 350, 'animation': 'assets/images/character_a/07_3_atk/'},
-        'air': {'display_name': "Không Kích",'damage': 8, 'duration': 400, 'cooldown': 30, 'stun': 300, 'animation': 'assets/images/character_a/air_atk/'},
+        # --- CẬP NHẬT: Thêm 'hit_on_frame' để kiểm soát khi nào hitbox active ---
+        'light1': {'display_name': "Chém Thường",'damage': 6, 'duration': 330, 'cooldown': 28, 'stun': 220, 'hit_on_frame': 2, 'animation': 'assets/images/character_a/05_1_atk/'},
+        'light2': {'display_name': "Liên Hoàn Trả",'damage': 7, 'duration': 475, 'cooldown': 32, 'stun': 280, 'hit_on_frame': 4, 'animation': 'assets/images/character_a/06_2_atk/'},
+        'light3': {'display_name': "Trảm Hỏa",'damage': 9, 'knockback': 8, 'duration': 700, 'cooldown': 50, 'stun': 400, 'hit_on_frame': 8, 'animation': 'assets/images/character_a/07_3_atk/'},
+        'air': {'display_name': "Trảm Không",'damage': 10, 'duration': 400, 'cooldown': 30, 'stun': 300, 'hit_on_frame': 5, 'animation': 'assets/images/character_a/air_atk/'},
         'special': {
             'display_name': "Hỏa Long Ba",
-            'damage': 25, 'knockback': 12, 'duration': 600, 'cooldown': 50, 'stun': 500,
+            'damage': 25, 'knockback': 15, 'duration': 733, 'cooldown': 50, 'stun': 550, 
             'animation': 'assets/images/character_a/08_sp_atk/',
             'hitbox_size': (200, 200),
             'hitbox_offset': (30, -200)
@@ -73,25 +75,26 @@ CHAR_A_STATS = {
         'defend': 'assets/images/character_a/09_defend/', 'roll': 'assets/images/character_a/04_roll/',
         'take_hit': 'assets/images/character_a/10_take_hit/', 'death': 'assets/images/character_a/11_death/'
     },
-    'animation_speeds': { 'light1': 30, 'light2': 25, 'light3': 30, 'take_hit': 50, 'death': 150, 'defend': 60,'roll': 90  },
+    # --- CẬP NHẬT: Tăng giá trị để làm chậm animation ---
+     'animation_speeds': { 'light1': 25, 'light2': 35, 'light3': 30, 'special': 25, 'air': 40, 'death': 100, 'defend': 60,'roll': 80 },
     'hold_frames': { 'defend': 8 }
 }
 
-# --- THÔNG SỐ NHÂN VẬT B ---
+# --- THÔNG SỐ NHÂN VẬT B (ĐÃ CẬP NHẬT) ---
 CHAR_B_STATS = {
     'lore': "Một sát thủ nhanh nhẹn thuộc một tổ chức bí ẩn. Hắn sử dụng song đao để kết liễu mục tiêu trong chớp mắt.",
     'name': "Sát Thủ Tốc Độ", 'max_hp': 90, 'max_sp': 100, 'speed': 4.6, 'air_speed': 6,
     'defense_modifier': 0.6, 'sp_gain_on_combo_finish': 10,
     'attacks': {
-        'light1': {'display_name': "Song Đao Trảm",'damage': 7, 'duration': 200, 'cooldown': 15, 'stun': 180, 'hit_on_frame': 3, 'animation': 'assets/images/character_b/1_atk/'},
-        'light2': {'display_name': "Xoay Người Chém",'damage': 9, 'duration': 450, 'cooldown': 15, 'stun': 300, 'hit_on_frame': 5, 'animation': 'assets/images/character_b/2_atk/'},
-        'light3': {'display_name': "Liên Hoàn Cước",'damage': 11, 'knockback': 10, 'duration': 780, 'cooldown': 35, 'stun': 400, 'hit_on_frame': 18, 'animation': 'assets/images/character_b/3_atk/'},
-        'air': {'display_name': "Phi Dao",'damage': 12, 'duration': 350, 'cooldown': 25, 'stun': 350, 'hit_on_frame': 4, 'animation': 'assets/images/character_b/air_atk/'},
+        'light1': {'display_name': "Chém Thường",'damage': 7, 'duration': 200, 'cooldown': 12, 'stun': 160, 'hit_on_frame': 2, 'animation': 'assets/images/character_b/1_atk/'},
+        'light2': {'display_name': "Song Đao Liên Ảnh",'damage': 8, 'duration': 350, 'cooldown': 15, 'stun': 260, 'hit_on_frame': 5, 'animation': 'assets/images/character_b/2_atk/'}, # Duration giảm ~6 frame
+        'light3': {'display_name': "Liên Vũ Phong Đao",'damage': 10, 'knockback': 10, 'duration': 647, 'cooldown': 35, 'stun': 320, 'hit_on_frame': 14, 'animation': 'assets/images/character_b/3_atk/'}, # Duration giảm ~8 frame
+        'air': {'display_name': "Đoạn Không Trảm",'damage': 12, 'duration': 350, 'cooldown': 25, 'stun': 350, 'hit_on_frame': 4, 'animation': 'assets/images/character_b/air_atk/'},
         'special': {
-            'display_name': "Bão Kiếm Vô Ảnh",
+            'display_name': "Vô Ảnh Sát",
             'damage': 10, 'hits': 3, 'hit_frames': [11, 17, 20],
-            'knockback_on_last_hit': 15, 'duration': 800, 'cooldown': 60,
-            'stun': 150, 'animation': 'assets/images/character_b/sp_atk/',
+            'knockback_on_last_hit': 15, 'duration': 800, 'cooldown': 55,
+            'stun': 120, 'animation': 'assets/images/character_b/sp_atk/',
             'hitbox_size': (80, 190),
             'hitbox_offset': (10, -185),
             'range_box': {'size': (250, 250), 'offset': (10, -250)}
@@ -142,4 +145,4 @@ SFX_AIR_HIT = 'assets/audio/sfx/airhit.wav'   # Âm thanh khi đòn đánh trên
 ROUND_ANNOUNCE_DURATION = 2000 # Thời gian hiển thị "Round X" (2 giây)
 COUNTDOWN_STEP_DURATION = 1000 # Thời gian mỗi bước đếm ngược "3, 2, 1" (1 giây)
 FIGHT_ANNOUNCE_DURATION = 1000 # Thời gian hiển thị "FIGHT!" (1 giây)
-CONFIRMATION_DURATION = 1500 
+CONFIRMATION_DURATION = 1500
