@@ -7,6 +7,7 @@ from .ui import (draw_main_menu_screen, draw_character_select_screen,
                  draw_guide_screen) # Thêm draw_guide_screen
 from .ai.ai_random import AIRandom
 from .ai.ai_rulebased import AIRuleBased
+from .ai.ai_heuristic import AIHeuristic
 
 def load_animation_frames(path):
     if not os.path.isdir(path):
@@ -117,7 +118,7 @@ class Game:
 
         if self.difficulty_choice == "EASY": self.ai_controller = AIRandom(self.ai, self.player)
         elif self.difficulty_choice == "MEDIUM": self.ai_controller = AIRuleBased(self.ai, self.player)
-        elif self.difficulty_choice == "HARD": self.ai_controller = AIRuleBased(self.ai, self.player)
+        elif self.difficulty_choice == "HARD": self.ai_controller = AIHeuristic(self.ai, self.player, difficulty='Hard')
 
         self.player_rounds_won, self.ai_rounds_won, self.current_round = 0, 0, 1
         self.winner = None
