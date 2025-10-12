@@ -93,8 +93,8 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 
 1.  **Clone repository**
     ```bash
-    git clone [URL_REPOSITORY_CỦA_BẠN]
-    cd [TÊN_THƯ_MỤC_DỰ_ÁN]
+    git clone https://github.com/gameAI-group/KOMBAT_AI_PROJECT.git
+    cd KOMBAT_AI_PROJECT
     ```
 
 2.  **Cài đặt thư viện**
