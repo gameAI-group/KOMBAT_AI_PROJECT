@@ -1,49 +1,75 @@
-KOMBAT_AI_PROJECT/
-│
-├── assets/
-│   ├── images/
-│   │   ├── character_a/
-│   │   │   ├── portrait.png          <-- Ảnh đại diện nhân vật để chọn khi menu chọn nhân vật
-│   │   │   ├── 01_idle/              <-- Animation đứng yên (idle) của nhân vật A
-│   │   │   ├── 02_run/               <-- Animation chạy
-│   │   │   └── ...                   <-- Các folder khác: attack, jump, hit, die…
-│   │   ├── character_b/              <-- Tương tự character_a, nhưng là nhân vật B
-│   │   │   ├── portrait.png
-│   │   │   ├── 01_idle/
-│   │   │   └── ...
-│   │   ├── backgrounds/
-│   │   │   ├── main_menu_bg.png      <-- Background menu chính
-│   │   │   ├── char_select_bg.png    <-- Background màn hình chọn nhân vật
-│   │   │   └── stage_01.png          <-- Background của stage 1
-│   │   └── ui/
-│   │       ├── HP_SP_frame.png  <-- Khung thanh máu
-│   │       ├── p1_cursor.png         <-- Con trỏ người chơi 1
-│   │       ├── cpu_cursor.png        <-- Con trỏ AI / CPU
-│   │       └── button_restart.png    <-- Nút restart game
-│   ├── audio/
-│   │   ├── music/
-│   │   │   ├── menu_music.mp3        <-- Nhạc nền menu
-│   │   │   └── battle_music.mp3      <-- Nhạc nền khi battle
-│   │   └── sfx/
-│   │       ├── select_move.wav       <-- Âm thanh di chuyển con trỏ khi chọn
-│   │       └── select_confirm.wav    <-- Âm thanh khi confirm chọn
-│   └── fonts/
-│       └── main_font.ttf             <-- Font chữ chính của game
-│
-├── src/
-│   ├── __init__.py
-│   ├── config.py                     <-- Các thông số cấu hình game (screen size, FPS,…)
-│   ├── game.py                       <-- Quản lý flow game: menu, chọn nhân vật, battle
-│   ├── fighter.py                    <-- Quản lý fighter: máu, animation, di chuyển, attack
-│   ├── ui.py                         <-- Giao diện: vẽ health bar, menu, cursors
-│   └── ai/
-│       ├── __init__.py
-│       ├── ai_base.py                <-- Lớp base cho tất cả AI
-│       ├── ai_random.py              <-- AI đánh ngẫu nhiên
-│       ├── ai_rule_based.py          <-- AI theo luật (rule-based)
-│       └── ai_heuristic.py           <-- AI nâng cao, heuristic
-│
-├── main.py                           <-- Entry point của game, chạy loop chính
-├── requirements.txt                  <-- Thư viện cần cài (pygame,…)
-├── README.md                          <-- Giới thiệu, hướng dẫn cài đặt & chơi
-└── README_rules.md                    <-- Hướng dẫn rules / cơ chế combat game
+🥷 Danh sách kỹ năng / hành động trong game
+
+1. Tấn công cơ bản (Light Attacks / Combo)
+	•	Light1 / Light2 / Light3
+	•	Tấn công nhanh, sát thương nhỏ → trung bình.
+	•	Có thể chain combo: Light1 → Light2 → Light3.
+	•	Mỗi chiêu có damage, stun, knockback, cooldown riêng.
+	•	Khi trúng mục tiêu sẽ hồi lại SP (sp_gain_on_hit).
+	•	Riêng Char B (Sát Thủ) khi kết thúc combo (light3) còn được bonus SP (sp_gain_on_combo_finish).
+
+2. Đòn trên không (Air Attack)
+	•	Air attack
+	•	Thực hiện khi nhân vật đang ở trên không.
+	•	Có giới hạn số lần (mỗi lần nhảy chỉ dùng được vài lần → air_attacks_left).
+	•	Gây sát thương và stun, thường để chặn đối phương khi nhảy hoặc áp sát.
+
+3. Đòn đặc biệt (Special Attack)
+	•	SP Skill (mất SP để dùng, tốn SP_COST_SPECIAL).
+	•	Char A (Kiếm Sĩ Lửa)
+	•	Gây sát thương lớn, knockback mạnh.
+	•	Có hitbox rộng (hitbox_size), thích hợp để kết thúc combo hoặc dồn damage.
+	•	Char B (Sát Thủ Tốc Độ)
+	•	Đòn đánh đa hit (3 lần), đánh theo frame quy định (hit_frames).
+	•	Có range box (kiểm tra phạm vi trước khi lao đến).
+	•	Nếu trúng mục tiêu → combo đa hit, nếu hụt thì dịch chuyển nhanh đến vị trí ngẫu nhiên trong range.
+	•	Rất phù hợp để mở combo hoặc bắt bài khi đối thủ thủ thế.
+
+4. Phòng thủ (Defend)
+	•	Khi giữ defend:
+	•	Giảm sát thương nhận vào (defense_modifier).
+	•	Khi block thành công, được hồi SP (sp_gain_on_block).
+	•	Không di chuyển / không tấn công được trong lúc phòng thủ.
+
+5. Roll (Lướt né)
+	•	Roll thường (Normal Roll)
+	•	Tốn SP (SP_COST_ROLL).
+	•	Có i-frame (invincible frame) từ ROLL_IFRAME_START đến ROLL_IFRAME_DURATION → giúp né chiêu.
+	•	Có cooldown (ROLL_COOLDOWN_DURATION).
+	•	Có thể roll trên đất và cả trên không (giới hạn số lần: air_rolls_left).
+	•	Tech Roll (Roll khi bị đánh)
+	•	Nếu vừa trúng đòn → có cửa sổ 150ms (TECH_ROLL_WINDOW) để phản ứng.
+	•	Tốn nhiều SP hơn (SP_COST_TECH_ROLL).
+	•	Khi thành công: thoát stun, bật trạng thái xuyên thấu (tech_rolling) → không bị pushbox cản.
+	•	Hữu ích để thoát khỏi combo hoặc corner trap.
+
+6. Jump (Nhảy)
+	•	Nhảy tối đa jumps_left = 2 (double jump).
+	•	Khi nhảy, tốc độ ngang thay đổi thành air_speed.
+	•	Reset số lần nhảy khi chạm đất.
+
+7. Passive SP Gain (Hồi SP thụ động)
+	•	Mỗi PASSIVE_SP_GAIN_RATE ms → hồi lại PASSIVE_SP_GAIN_AMOUNT.
+	•	Đảm bảo dù không đánh vẫn có thể tích SP để dùng skill đặc biệt / roll.
+
+8. Knockback & Hit Stun
+	•	Khi trúng đòn:
+	•	Nhân vật bị trừ HP theo damage (giảm nếu defend).
+	•	Bị đẩy lùi (knockback).
+	•	Bị stun (không thể điều khiển) trong thời gian stun_duration.
+	•	Trong trạng thái stun có thể Tech Roll nếu kịp input.
+
+👉 Tổng kết:
+	•	Light/Combo → tạo nhịp độ và hồi SP.
+	•	Air Attack → kiểm soát không trung.
+	•	Special → chiêu kết liễu / mở combo mạnh, tốn SP.
+	•	Defend → giảm damage, hồi SP khi block.
+	•	Roll/Tech Roll → cơ chế phòng thủ nâng cao, né chiêu hoặc thoát combo.
+	•	Passive SP → giữ game cân bằng, luôn có thể hồi SP dần dần.
+⸻
+AIR ATTACK ĐÁNH TỐI ĐA TRÊN KHÔNG 2 LẦN, CÓ THỂ SỬ DỤNG SPECIAL ATTACK
+MỖI 5s sau nếu đủ sp thì sẽ sử dụng đc lại chiêu đặc biệt
+NẾU BẤM VÀO D - PHÒNG THỦ THÌ SẼ DÃ Ở THẾ THỦ KO PHẢI LÀ ĂN HIT
+NẾU ĐANG BỊ ĐÁNH ÁP SÁT CÓ THỂ BẤM SPACE LƯỚT QUA ĐỐI THỦ TUY TỐN NHIỀU MANA 
+ĐÃ GIÚP HIỆP SĨ CHẬM TÍ
+TẠO VÙNG TẤN CÔNG CHIÊU ĐẶC BIỆT RIÊNG CHO A VÀ B, NẾU KO NẰM TRONG VÙNG ĐÓ MỚI BỊ MẤT MÁU( NẾU MUỐN THẤY VÙNG ĐÓ THÌ Ở fighter.py cái DEBUG_DRAW = False biến thành DEBUG_DRAW = True )
