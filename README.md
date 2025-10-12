@@ -130,8 +130,9 @@ Dự án này sử dụng các tài sản đồ họa và âm thanh tuyệt vờ
     *   Nhân vật A (Kiếm Sĩ Lửa): [Elementals - Fire Knight](https://chierit.itch.io/elementals-fire-knight)
     *   Nhân vật B (Sát Thủ Tốc Độ): [Elementals - Wind Hashashin](https://chierit.itch.io/elementals-wind-hashashin)
 
-*   **Hình nền** (`backgrounds`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Hình nền]**
-*   **Giao diện & Icon** (`ui`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Giao diện]**
+*   **Hình nền (`backgrounds`)** bởi nghệ sĩ **[ansimuz](https://ansimuz.itch.io/)** trên itch.io:
+    *   Bộ sưu tập: [Gothicvania Patreon Collection](https://ansimuz.itch.io/gothicvania-patreon-collection)
+
 *   **Âm thanh & Nhạc nền** (`audio`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Âm thanh]**
 
 Sự đóng góp của họ đã giúp nâng cao đáng kể chất lượng và trải nghiệm của trò chơi.
