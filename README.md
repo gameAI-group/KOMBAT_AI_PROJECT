@@ -143,6 +143,8 @@ Chúng tôi thực sự ngưỡng mộ tài năng và sự tận tâm được t
 
 Nếu bạn cũng yêu thích phong cách nghệ thuật của game, chúng tôi khuyến khích bạn ghé thăm trang của họ. Mỗi lượt theo dõi, lời bình luận tích cực hay việc mua một tài sản trả phí đều là nguồn động lực to lớn giúp họ tiếp tục sáng tạo và cống hiến cho cộng đồng.
 
+---
+
 ## 🔮 Các cải tiến trong tương lai
 
 *   **Thêm nhân vật mới:** Mở rộng danh sách chiến binh với các bộ kỹ năng đa dạng hơn.
