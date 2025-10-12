@@ -137,7 +137,7 @@ Dự án này sẽ không thể có được diện mạo chuyên nghiệp và s
 
 ---
 
-❤️ **Hãy cùng nhau hỗ trợ những nhà sáng tạo tuyệt vời này!**
+❤️ **Hãy cùng nhau ủng hộ những nhà sáng tạo tuyệt vời này!**
 
 Chúng tôi thực sự ngưỡng mộ tài năng và sự tận tâm được thể hiện trong từng tác phẩm. Việc họ chia sẻ miễn phí tài nguyên chất lượng cao chính là điều kiện tiên quyết giúp những dự án độc lập như thế này có thể thành hình.
 
