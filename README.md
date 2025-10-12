@@ -124,14 +124,11 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 
 ## 🙏 Nguồn tài nguyên & Lời cảm ơn
 
-Dự án này sử dụng các tài sản đồ họa và âm thanh tuyệt vời từ nhiều nguồn khác nhau. Chúng tôi xin gửi lời cảm ơn chân thành đến các tác giả và nghệ sĩ đã tạo ra những tác phẩm này:
+Toàn bộ tài sản đồ họa được sử dụng trong dự án này—bao gồm hoạt ảnh nhân vật (`character_a`, `character_b`), hình nền (`backgrounds`), và các thành phần giao diện (`ui`)—đều được lấy từ **[Tên Nguồn hoặc Nghệ Sĩ]**.
 
-*   **Hoạt ảnh Nhân vật** (`character_a`, `character_b`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Nhân vật]**
-*   **Hình nền** (`backgrounds`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Hình nền]**
-*   **Giao diện & Icon** (`ui`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Giao diện]**
-*   **Âm thanh & Nhạc nền** (`audio`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Âm thanh]**
+Chúng tôi vô cùng biết ơn tác giả đã tạo ra những tác phẩm tuyệt vời này, giúp nâng cao đáng kể chất lượng hình ảnh của trò chơi.
 
-Sự đóng góp của họ đã giúp nâng cao đáng kể chất lượng và trải nghiệm của trò chơi.
+> **Lưu ý:** Vui lòng thay thế `[Tên Nguồn hoặc Nghệ Sĩ]` bằng tên cụ thể của nguồn hoặc nghệ sĩ đã cung cấp tài sản đồ họa để ghi công một cách chính xác.
 
 ## 🔮 Các cải tiến trong tương lai
 
