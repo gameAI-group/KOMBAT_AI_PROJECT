@@ -109,11 +109,11 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 
 ## 📱 Ảnh chụp màn hình
 
-| Trang chủ | Chọn nhân vật A |
+| Trang chủ | chọn và thông tin nhân vật Kiếm Sĩ |
 | :---: | :---: |
 | ![Màn hình chính của game](assets/images/README/main_screen.png) | ![Màn hình chọn và thông tin nhân vật Kiếm Sĩ](assets/images/README/chonnhanvatA.png) |
 
-| Chọn nhân vật B | Chọn mức độ |
+|  chọn và thông tin nhân vật Sát Thủ | Chọn mức độ |
 | :---: | :---: |
 | ![Màn hình chọn và thông tin nhân vật Sát Thủ](assets/images/README/chonnhanvatB.png) | ![Màn hình chọn mức độ](assets/images/README/chonmucdo.png) |
 
