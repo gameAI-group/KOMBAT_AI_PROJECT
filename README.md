@@ -126,10 +126,7 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 
 Dự án này sử dụng các tài sản đồ họa và âm thanh tuyệt vời từ nhiều nguồn khác nhau. Chúng tôi xin gửi lời cảm ơn chân thành đến các tác giả và nghệ sĩ đã tạo ra những tác phẩm này:
 
-*   **Hoạt ảnh Nhân vật** bởi nghệ sĩ **[chierit](https://chierit.itch.io/)** trên itch.io:
-    *   Nhân vật A (Kiếm Sĩ Lửa): [Elementals - Fire Knight](https://chierit.itch.io/elementals-fire-knight)
-    *   Nhân vật B (Sát Thủ Tốc Độ): [Elementals - Wind Hashashin](https://chierit.itch.io/elementals-wind-hashashin)
-
+*   **Hoạt ảnh Nhân vật** (`character_a`, `character_b`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Nhân vật]**
 *   **Hình nền** (`backgrounds`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Hình nền]**
 *   **Giao diện & Icon** (`ui`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Giao diện]**
 *   **Âm thanh & Nhạc nền** (`audio`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Âm thanh]**
