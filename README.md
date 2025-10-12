@@ -1,4 +1,7 @@
 # ⚔️ Kombat AI: Game Đối Kháng Pygame với Hệ Thống AI Đa Cấp
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python Version](https://img.shields.io/badge/Python-3.7%2B-blue.svg)](https://www.python.org/)
+[![Pygame](https://img.shields.io/badge/Made%20with-Pygame-green.svg)](https://www.pygame.org/)
 
 Một game đối kháng 2D được xây dựng bằng Python và Pygame, nơi người chơi đối đầu với một hệ thống AI đa cấp độ, từ hành vi ngẫu nhiên đến khả năng học hỏi và thích ứng với chiến thuật của người chơi.
 
