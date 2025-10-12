@@ -12,7 +12,7 @@ Thông qua việc xây dựng dự án này, chúng tôi đã nâng cao kỹ nă
 
 *   **Ngôn ngữ:** Python 3
 *   **Thư viện:** Pygame
-*   **Kiến trúc:** Lập trình hướng đối tượng (OOP) & Thiết kế dựa trên cấu hình (Configuration-Driven)
+*   **Kiến trúc:** Lập trình hướng đối tượng (OOP)
 *   **Công cụ phát triển:**
     *   **IDE:** Visual Studio Code
     *   **Quản lý phiên bản:** Git
