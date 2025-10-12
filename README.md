@@ -122,9 +122,9 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 | ![Giao diện trong trận đấu](assets/images/README/trongtran.png) | ![Màn hình kết thúc trận đấu](assets/images/README/ketthuc.png) |
 
 
-## 🙏 Nguồn tài nguyên & Lời cảm ơn
+## 🙏 Lời Cảm Ơn & Ghi Nhận Tác Giả
 
-Dự án này sử dụng các tài sản đồ họa và âm thanh tuyệt vời từ nhiều nguồn khác nhau. Chúng tôi xin gửi lời cảm ơn chân thành đến các tác giả và nghệ sĩ đã tạo ra những tác phẩm này:
+Dự án này sẽ không thể có được diện mạo chuyên nghiệp và sống động nếu thiếu đi sự đóng góp từ những nhà sáng tạo tài năng và hào phóng trong cộng đồng. Chúng tôi xin trân trọng ghi nhận và gửi lời cảm ơn sâu sắc nhất đến:
 
 *   **Hoạt ảnh Nhân vật** bởi nghệ sĩ **[chierit](https://chierit.itch.io/)** trên itch.io:
     *   Nhân vật A (Kiếm Sĩ Lửa): [Elementals - Fire Knight](https://chierit.itch.io/elementals-fire-knight)
@@ -133,9 +133,15 @@ Dự án này sử dụng các tài sản đồ họa và âm thanh tuyệt vờ
 *   **Hình nền (`backgrounds`)** bởi nghệ sĩ **[ansimuz](https://ansimuz.itch.io/)** trên itch.io:
     *   Bộ sưu tập: [Gothicvania Patreon Collection](https://ansimuz.itch.io/gothicvania-patreon-collection)
 
-*   **Âm thanh & Nhạc nền** (`audio`): từ **[Tên Nguồn hoặc Nghệ sĩ cho Âm thanh]**
+*   **Âm thanh & Nhạc nền** (`audio`): Được tổng hợp từ nhiều nguồn cung cấp tài sản miễn phí (royalty-free) khác nhau trên internet.
 
-Sự đóng góp của họ đã giúp nâng cao đáng kể chất lượng và trải nghiệm của trò chơi.
+---
+
+❤️ **Hãy cùng nhau hỗ trợ những nhà sáng tạo tuyệt vời này!**
+
+Chúng tôi thực sự ngưỡng mộ tài năng và sự tận tâm được thể hiện trong từng tác phẩm. Việc họ chia sẻ miễn phí tài nguyên chất lượng cao chính là điều kiện tiên quyết giúp những dự án độc lập như thế này có thể thành hình.
+
+Nếu bạn cũng yêu thích phong cách nghệ thuật của game, chúng tôi khuyến khích bạn ghé thăm trang của họ. Mỗi lượt theo dõi, lời bình luận tích cực hay việc mua một tài sản trả phí đều là nguồn động lực to lớn giúp họ tiếp tục sáng tạo và cống hiến cho cộng đồng.
 
 ## 🔮 Các cải tiến trong tương lai
 
