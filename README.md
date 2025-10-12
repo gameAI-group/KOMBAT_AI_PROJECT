@@ -111,9 +111,10 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 
 | Trang chủ | Chọn nhân vật |
 | :---: | :---: |
-| ![Màn hình chính của game](URL_ĐẾN_ẢNH_TRANG_CHỦ_CỦA_BẠN) | ![Màn hình chọn nhân vật](URL_ĐẾN_ẢNH_CHỌN_NHÂN_VẬT_CỦA_BẠN) |
-| **Giao diện trận đấu** | **Màn hình Hướng dẫn** |
-| ![Giao diện trong trận đấu](URL_ĐẾN_ẢNH_GAMEPLAY_CỦA_BẠN) | ![Màn hình hướng dẫn chơi](URL_ĐẾN_ẢNH_HƯỚNG_DẪN_CỦA_BẠN) |
+| ![Màn hình chính của game](https://raw.githubusercontent.com/gameAI-group/KOMBAT_AI_PROJECT/main/assets/images/README/main_screen.png) | ![Màn hình chọn nhân vật](https://raw.githubusercontent.com/gameAI-group/KOMBAT_AI_PROJECT/main/assets/images/README/chonnhanvatA.png) |
+| **Giao diện trận đấu** | **Màn hình Kết thúc** |
+| ![Giao diện trong trận đấu](https://raw.githubusercontent.com/gameAI-group/KOMBAT_AI_PROJECT/main/assets/images/README/trongtran.png) | ![Màn hình kết thúc trận đấu](https://raw.githubusercontent.com/gameAI-group/KOMBAT_AI_PROJECT/main/assets/images/README/ketthuc.png) |
+
 
 ## 🙏 Nguồn tài nguyên & Lời cảm ơn
 
