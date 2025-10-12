@@ -1,4 +1,4 @@
-# ⚔️ Kombat AI: Đấu Trường Trí Tuệ 🧠
+# ⚔️ Kombat AI: Game Đối Kháng Pygame với Hệ Thống AI Đa Cấp
 
 Một game đối kháng 2D được xây dựng bằng Python và Pygame, nơi người chơi đối đầu với một hệ thống AI đa cấp độ, từ hành vi ngẫu nhiên đến khả năng học hỏi và thích ứng với chiến thuật của người chơi.
 
