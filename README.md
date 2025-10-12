@@ -112,8 +112,8 @@ Mỗi nhân vật có bộ chỉ số, kỹ năng và hoạt ảnh riêng biệt
 | Trang chủ | Chọn nhân vật |
 | :---: | :---: |
 | ![Màn hình chính của game](URL_ĐẾN_ẢNH_TRANG_CHỦ_CỦA_BẠN) | ![Màn hình chọn nhân vật](URL_ĐẾN_ẢNH_CHỌN_NHÂN_VẬT_CỦA_BẠN) |
-| **Giao diện trận đấu** | **Màn hình Game Over** |
-| ![Giao diện trong trận đấu](URL_ĐẾN_ẢNH_GAMEPLAY_CỦA_BẠN) | ![Màn hình kết thúc trận đấu](URL_ĐẾN_ẢNH_GAME_OVER_CỦA_BẠN) |
+| **Giao diện trận đấu** | **Màn hình Hướng dẫn** |
+| ![Giao diện trong trận đấu](URL_ĐẾN_ẢNH_GAMEPLAY_CỦA_BẠN) | ![Màn hình hướng dẫn chơi](URL_ĐẾN_ẢNH_HƯỚNG_DẪN_CỦA_BẠN) |
 
 ## 🙏 Nguồn tài nguyên & Lời cảm ơn
 
