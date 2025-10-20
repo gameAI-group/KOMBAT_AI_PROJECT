@@ -166,6 +166,6 @@ Dự án này được cấp phép dưới Giấy phép MIT - xem file `LICENSE`
 
 ## 📞 Liên hệ
 
-*   **Nhóm phát triển:** [Tên nhóm của bạn]
-*   **Email:** [Email liên hệ của nhóm]
-*   **GitHub:** [@Tên_GitHub_của_nhóm_hoặc_trưởng_nhóm]
+*   [@Chizk23](https://github.com/Chizk23) - Nguyễn Thanh Huyền
+*   [@BichUyen2609](https://github.com/BichUyen2609) - Nguyễn Thị Bích Uyên
+*   [@PhuongTran2212](https://github.com/PhuongTran2212) - Trần Thị Phượng
