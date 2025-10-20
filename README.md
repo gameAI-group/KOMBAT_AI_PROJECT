@@ -15,7 +15,7 @@ Thông qua việc xây dựng dự án này, chúng tôi đã nâng cao kỹ nă
 
 Nhấn vào hình dưới đây để xem video giới thiệu đầy đủ về các tính năng và gameplay của dự án!
 
-[![Xem Demo Gameplay trên YouTube](assets/images/README/thumbnail1.png)](https://youtu.be/YVVdls7yBd0)
+[![Xem Demo Gameplay trên YouTube](assets/images/README/thumbnail.png)](https://youtu.be/YVVdls7yBd0)
 
 ## 🚀 Công nghệ sử dụng
 
