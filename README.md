@@ -11,6 +11,12 @@ Dự án này được sinh ra từ ý tưởng tạo ra một trải nghiệm g
 
 Thông qua việc xây dựng dự án này, chúng tôi đã nâng cao kỹ năng lập trình game, thiết kế hệ thống AI, quản lý trạng thái game, và tối ưu hóa hiệu năng trong Pygame. Dự án đã dạy chúng tôi tầm quan trọng của việc xây dựng một cấu trúc mã nguồn có tổ chức (OOP) và cách mô phỏng hành vi thông minh thông qua các thuật toán heuristic.
 
+## 🎬 Demo Gameplay
+
+Nhấn vào hình dưới đây để xem video giới thiệu đầy đủ về các tính năng và gameplay của dự án!
+
+[![Xem Demo Gameplay trên YouTube](assets/images/README/thumbnail.png)](https://youtu.be/YVVdls7yBd0)
+
 ## 🚀 Công nghệ sử dụng
 
 *   **Ngôn ngữ:** Python 3
@@ -169,3 +175,4 @@ Dự án này được cấp phép dưới Giấy phép MIT - xem file `LICENSE`
 *   [@Chizk23](https://github.com/Chizk23) - Nguyễn Thanh Huyền
 *   [@BichUyen2609](https://github.com/BichUyen2609) - Nguyễn Thị Bích Uyên
 *   [@PhuongTran2212](https://github.com/PhuongTran2212) - Trần Thị Phượng
+*   [@phunolg](https://github.com/phunolg) - Trần Thị Thanh Phương
